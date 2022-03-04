@@ -17,11 +17,22 @@ namespace Pileolinks.Services
 
             LinkDirectory dev = new(Guid.NewGuid().ToString(), null, "Development", new());
             LinkDirectory hols = new(Guid.NewGuid().ToString(), null, "Holidays", new());
+            LinkDirectory recipes = new(Guid.NewGuid().ToString(), null, "Recipes", new());
+            
             dev.AddDirectory("Windows");
             dev.AddDirectory("Web");
 
+            recipes.AddDirectory("Curries");
+            recipes.AddDirectory("Stir Fry");
+            recipes.AddDirectory("Traditional");
+
+            LinkDirectory trad = (LinkDirectory)recipes.GetDescendant("Traditional");
+            trad.AddDirectory("Christmas");
+            trad.AddDirectory("Sunday Dinner");
+
             treeItems.Add(dev);
             treeItems.Add(hols);
+            treeItems.Add(recipes);
 
             return treeItems;
         }

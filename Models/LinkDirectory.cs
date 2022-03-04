@@ -37,7 +37,7 @@ namespace Pileolinks.Models
         {
             bool result;
 
-            if (Descendants.Any(d => d.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+            if (Descendants.Any(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
                 result = false;
             }
@@ -49,6 +49,11 @@ namespace Pileolinks.Models
             }
 
             return result;
+        }
+
+        public ITreeItem GetDescendant(string name)
+        {
+            return Descendants.FirstOrDefault(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
     }

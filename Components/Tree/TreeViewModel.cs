@@ -21,7 +21,7 @@ namespace Pileolinks.Components.Tree
         {
             Stack<ITreeItem> stack = new();
 
-            foreach (ITreeItem item in items)
+            foreach (ITreeItem item in items.OrderByDescending(i => i.Name))
             {
                 stack.Push(item);
             }
@@ -31,7 +31,7 @@ namespace Pileolinks.Components.Tree
                 ITreeItem current = stack.Pop();
                 Items.Add(new TreeItemViewModel(current));
 
-                foreach (ITreeItem item in current.Directories)
+                foreach (ITreeItem item in current.Directories.OrderByDescending(i => i.Name))
                 {
                     stack.Push(item);
                 }
