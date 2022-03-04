@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tree="clr-namespace:Pileolinks.Components.Tree"
+             x:Class="Pileolinks.Components.Tree.Tree"
+             x:DataType="tree:ITreeViewModel">
+    <ContentView.Resources>
+        <tree:DepthToMarginConverter x:Key="DepthToMarginConverter"></tree:DepthToMarginConverter>
+        <Style x:Key="TreeButtonStyle"
+               TargetType="Button">
+            <Setter Property="BackgroundColor"
+                    Value="Transparent" />
+            <Setter Property="HeightRequest"
+                    Value="48" />
+            <Setter Property="WidthRequest"
+                    Value="48" />
+            <Setter Property="HorizontalOptions"
+                    Value="Center" />
+            <Setter Property="VerticalOptions"
+                    Value="Center" />
+            <Setter Property="TextColor"
+                    Value="{StaticResource PrimaryColor}" />
+        </Style>
+    </ContentView.Resources>
+    <ContentView.Content>
+        <ScrollView>
+        <StackLayout Orientation="Vertical"
+                    BindableLayout.ItemsSource="{Binding Items, Mode=OneWay}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="tree:ITreeItemViewModel">
+                        <StackLayout Orientation="Horizontal"
+                                     Margin="{Binding Depth, Converter={StaticResource DepthToMarginConverter}}"
+                                     IsVisible="{Binding IsVisible, Mode=OneWay}">
+                            <Button x:Name="ExpandButton"
+                                    Text="+"
+                                    IsVisible="{Binding CanExpandAndIsNotExpanded, Mode=OneWay}"
+                                    Style="{StaticResource TreeButtonStyle}"
+                                    Command="{Binding ExpandCommand}"/>
+                            <Button x:Name="CollapseButton"
+                                    Text="-"
+                                    IsVisible="{Binding CanExpandAndIsExpanded, Mode=OneWay}"
+                                    Style="{StaticResource TreeButtonStyle}"
+                                    Command="{Binding CollapseCommand}"/>
+                            <BoxView WidthRequest="48"
+                                     HeightRequest="48"
+                                     BackgroundColor="Transparent"
+                                     IsVisible="{Binding CannotExpand, Mode=OneWay}" />
+                            <Label Text="{Binding Name}"
+                                   Margin="12, 0, 0, 0"
+                                   VerticalTextAlignment="Center"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+                <BindableLayout.EmptyViewTemplate>
+                    <DataTemplate>
+                        <Label HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="Nothing to see here, move along." />
+                    </DataTemplate>
+                </BindableLayout.EmptyViewTemplate>
+        </StackLayout>
+        </ScrollView>
+    </ContentView.Content>
+</ContentView>
