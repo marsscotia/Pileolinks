@@ -10,7 +10,11 @@
         <Grid RowSpacing="25" ColumnDefinitions="*, *"
               Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
 
-        <tree:Tree Items="{Binding Items, Mode=OneWay}" />
+        <tree:Tree Items="{Binding Items, Mode=OneWay}"
+                   SelectedItem="{Binding Selected}"/>
+
+        <Label Text="{Binding SelectedSummary, Mode=OneWay}"
+               Grid.Column="1" />
 
     </Grid>
     

@@ -14,6 +14,7 @@ namespace Pileolinks.Components.Tree
         private bool isVisible;
         private bool isExpanded;
         private int depth;
+        private bool isSelected;
         private Command expandCommand;
         private Command collapseCommand;
         public string Id => treeItem.Id;
@@ -26,7 +27,7 @@ namespace Pileolinks.Components.Tree
 
         public bool HasAncestor => treeItem.HasAncestor;
 
-        public bool HasDescendants => Descendants.Any();
+        public bool HasDescendants => treeItem.Descendants.Any();
 
         public bool HasDirectories => treeItem.HasDirectories;
 
@@ -81,6 +82,12 @@ namespace Pileolinks.Components.Tree
                     }
                 }
             }
+        }
+
+        public bool IsSelected
+        {
+            get => isSelected;
+            set => SetProperty(ref isSelected, value);
         }
 
         public bool CanExpandAndIsExpanded => HasDescendants && IsExpanded;
