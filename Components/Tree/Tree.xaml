@@ -46,20 +46,22 @@
                                      HeightRequest="48"
                                      BackgroundColor="Transparent"
                                      IsVisible="{Binding CannotExpand, Mode=OneWay}" />
+                            <BoxView WidthRequest="9"
+                                     HeightRequest="16"
+                                     BackgroundColor="{StaticResource PrimaryColor}"
+                                     IsVisible="{Binding IsSelected, Mode=OneWay}"
+                                     VerticalOptions="Center"/>
+                            <BoxView WidthRequest="9"
+                                     HeightRequest="16"
+                                     BackgroundColor="Transparent"
+                                     IsVisible="{Binding IsNotSelected, Mode=OneWay}"
+                                     VerticalOptions="Center"/>
                             <Label Text="{Binding Name}"
                                    Margin="12, 0, 0, 0"
                                    VerticalTextAlignment="Center"
                                    VerticalOptions="Fill"
                                    HorizontalOptions="Fill"
                                    BackgroundColor="Transparent">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label"
-                                             Binding="{Binding IsSelected}"
-                                             Value="True">
-                                        <Setter Property="BackgroundColor"
-                                                Value="LightGoldenrodYellow" />
-                                    </DataTrigger>
-                                </Label.Triggers>
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                                 </Label.GestureRecognizers>

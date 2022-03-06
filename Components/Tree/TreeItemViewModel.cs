@@ -87,8 +87,14 @@ namespace Pileolinks.Components.Tree
         public bool IsSelected
         {
             get => isSelected;
-            set => SetProperty(ref isSelected, value);
+            set
+            {
+                SetProperty(ref isSelected, value);
+                OnPropertyChanged(nameof(IsNotSelected));
+            }
         }
+
+        public bool IsNotSelected => !IsSelected;
 
         public bool CanExpandAndIsExpanded => HasDescendants && IsExpanded;
         public bool CanExpandAndIsNotExpanded => HasDescendants && !IsExpanded;

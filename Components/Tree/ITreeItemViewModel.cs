@@ -28,5 +28,6 @@ namespace Pileolinks.Components.Tree
         Command CollapseCommand { get; }
         Command ExpandCommand { get; }
         bool IsSelected { get; set; }
+        bool IsNotSelected { get; }
     }
 }
