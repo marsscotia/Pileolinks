@@ -23,5 +23,9 @@ namespace Pileolinks.Components.Tree
         bool HasAncestor { get; }
         bool HasDescendants { get; }
         bool HasDirectories { get; }
+
+        event EventHandler<ITreeItem> DescendantAdded;
+
+        bool AddDirectory(string name);
     }
 }

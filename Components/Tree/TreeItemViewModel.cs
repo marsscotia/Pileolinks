@@ -40,6 +40,8 @@ namespace Pileolinks.Components.Tree
         public Command ExpandCommand => expandCommand ??= new Command(Expand);
         public Command CollapseCommand => collapseCommand ??= new Command(Collapse);
 
+        public event EventHandler<ITreeItemViewModel> DescendantAdded;
+
         public int Depth
         {
             get => depth;
@@ -103,8 +105,8 @@ namespace Pileolinks.Components.Tree
         public TreeItemViewModel(ITreeItem item)
         {
             treeItem = item;
+            item.DescendantAdded += AddDescendant;
             Depth = CalculateDepth();
-            
         }
 
         private int CalculateDepth()
@@ -130,6 +132,39 @@ namespace Pileolinks.Components.Tree
         private void Collapse()
         {
             IsExpanded = false;
+        }
+
+        private void AddDescendant(object sender, ITreeItem descendant)
+        {
+            TreeItemViewModel treeItemViewModel = new(descendant);
+            int count = 0;
+            ITreeItemViewModel found = null;
+
+            while (count < Descendants.Count && found == null)
+            {
+                if (string.Compare(treeItemViewModel.Name, Descendants.ElementAt(count).Name, StringComparison.OrdinalIgnoreCase) <= 0)
+                {
+                    found = Descendants.ElementAt(count);
+                }
+                count++;
+            }
+            if (found != null)
+            {
+                Descendants.Insert(Descendants.IndexOf(found), treeItemViewModel);
+            }
+            else
+            {
+                Descendants.Add(treeItemViewModel);
+            }
+
+            IsExpanded = true;
+            OnPropertyChanged(nameof(HasDescendants));
+            OnPropertyChanged(nameof(CanExpandAndIsExpanded));
+            OnPropertyChanged(nameof(CanExpandAndIsNotExpanded));
+            OnPropertyChanged(nameof(CannotExpand));
+            
+
+            DescendantAdded?.Invoke(this, treeItemViewModel);
         }
 
     }

@@ -13,8 +13,28 @@
         <tree:Tree Items="{Binding Items, Mode=OneWay}"
                    SelectedItem="{Binding Selected}"/>
 
-        <Label Text="{Binding SelectedSummary, Mode=OneWay}"
-               Grid.Column="1" />
+        <StackLayout Orientation="Vertical"
+                     Grid.Column="1"
+                     Spacing="8">
+            <Label Text="Add a directory" />
+
+            <Label Text="{Binding SelectedSummary, Mode=OneWay}" />
+            <Entry Text="{Binding CategoryName, Mode=TwoWay}"
+                   TextColor="{StaticResource PrimaryColor}"
+                   BackgroundColor="LightSteelBlue"
+                   Placeholder="Type a directory name here"/>
+            <Button Text="Add directory"
+                    Command="{Binding AddDirectoryCommand}"
+                    TextColor="{StaticResource PrimaryColor}"/>
+            <Label Text="Add a collection" />
+            <Entry Text="{Binding CollectionName, Mode=TwoWay}"
+                   TextColor="{StaticResource PrimaryColor}"
+                   BackgroundColor="LightSteelBlue"
+                   Placeholder="Type a collection name here"/>
+            <Button Text="Add Collection"
+                    Command="{Binding AddCollectionCommand}"
+                    TextColor="{StaticResource PrimaryColor}" />
+        </StackLayout>
 
     </Grid>
     

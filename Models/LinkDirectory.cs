@@ -25,6 +25,8 @@ namespace Pileolinks.Models
 
         public bool HasDirectories => Descendants != null && Descendants.Any(d => d.Type == TreeItemType.Directory);
 
+        public event EventHandler<ITreeItem> DescendantAdded;
+
         public LinkDirectory(string id, ITreeItem parent, string name, List<ITreeItem> descendants)
         {
             this.id = id;
@@ -46,6 +48,7 @@ namespace Pileolinks.Models
                 LinkDirectory linkDirectory = new(Guid.NewGuid().ToString(), this, name, new());
                 Descendants.Add(linkDirectory);
                 result = true;
+                DescendantAdded?.Invoke(this, linkDirectory);
             }
 
             return result;

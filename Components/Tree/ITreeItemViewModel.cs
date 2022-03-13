@@ -29,5 +29,7 @@ namespace Pileolinks.Components.Tree
         Command ExpandCommand { get; }
         bool IsSelected { get; set; }
         bool IsNotSelected { get; }
+
+        event EventHandler<ITreeItemViewModel> DescendantAdded;
     }
 }
