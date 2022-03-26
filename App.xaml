@@ -13,6 +13,10 @@
                         Value="{StaticResource PrimaryColor}" />
             </Style>
 
+            <x:String x:Key="ThreeDotMenu">&#xf558;</x:String>
+            <x:String x:Key="RightChevron">&#xf2ae;</x:String>
+            <x:String x:Key="DownChevron">&#xf2a1;</x:String>
+            <x:String x:Key="Tick">&#xf293;</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

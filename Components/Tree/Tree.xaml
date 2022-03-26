@@ -6,67 +6,80 @@
              x:Name="this">
     <ContentView.Resources>
         <tree:DepthToMarginConverter x:Key="DepthToMarginConverter"></tree:DepthToMarginConverter>
-        <Style x:Key="TreeButtonStyle"
-               TargetType="Button">
-            <Setter Property="BackgroundColor"
-                    Value="Transparent" />
-            <Setter Property="HeightRequest"
-                    Value="48" />
-            <Setter Property="WidthRequest"
-                    Value="48" />
-            <Setter Property="HorizontalOptions"
-                    Value="Center" />
-            <Setter Property="VerticalOptions"
-                    Value="Center" />
-            <Setter Property="TextColor"
-                    Value="{StaticResource PrimaryColor}" />
-        </Style>
     </ContentView.Resources>
     <ContentView.Content>
         <ScrollView>
-        <StackLayout Orientation="Vertical"
-                     BindingContext="{x:Reference this}"
-                     BindableLayout.ItemsSource="{Binding ItemsSource, Mode=OneWay}">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="tree:ITreeItemViewModel">
-                        <StackLayout Orientation="Horizontal"
+            <StackLayout Orientation="Vertical"
+                         BindingContext="{x:Reference this}"
+                         BindableLayout.ItemsSource="{Binding ItemsSource, Mode=OneWay}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="tree:ITreeItemViewModel">
+                        <HorizontalStackLayout 
                                      Margin="{Binding Depth, Converter={StaticResource DepthToMarginConverter}}"
-                                     IsVisible="{Binding IsVisible, Mode=OneWay}">
-                            <Button x:Name="ExpandButton"
-                                    Text="+"
+                                     IsVisible="{Binding IsVisible, Mode=OneWay}"
+                                     >
+                            <Image x:Name="ExpandButton"
                                     IsVisible="{Binding CanExpandAndIsNotExpanded, Mode=OneWay}"
-                                    Style="{StaticResource TreeButtonStyle}"
-                                    Command="{Binding ExpandCommand}"/>
-                            <Button x:Name="CollapseButton"
-                                    Text="-"
+                                         VerticalOptions="Center"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   Aspect="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ExpandCommand}" />
+                                </Image.GestureRecognizers>
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource RightChevron}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"
+                                                     />
+                                </Image.Source>
+                            </Image>
+                            <Image x:Name="CollapseButton"
                                     IsVisible="{Binding CanExpandAndIsExpanded, Mode=OneWay}"
-                                    Style="{StaticResource TreeButtonStyle}"
-                                    Command="{Binding CollapseCommand}"/>
+                                         VerticalOptions="Center"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   Aspect="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding CollapseCommand}" />
+                                </Image.GestureRecognizers>
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource DownChevron}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"/>
+                                </Image.Source>
+                            </Image>
                             <BoxView WidthRequest="48"
                                      HeightRequest="48"
                                      BackgroundColor="Transparent"
-                                     IsVisible="{Binding CannotExpand, Mode=OneWay}" />
-                            <BoxView WidthRequest="9"
-                                     HeightRequest="16"
-                                     BackgroundColor="{StaticResource PrimaryColor}"
-                                     IsVisible="{Binding IsSelected, Mode=OneWay}"
-                                     VerticalOptions="Center"/>
-                            <BoxView WidthRequest="9"
-                                     HeightRequest="16"
-                                     BackgroundColor="Transparent"
-                                     IsVisible="{Binding IsNotSelected, Mode=OneWay}"
+                                     IsVisible="{Binding CannotExpand, Mode=OneWay}"
                                      VerticalOptions="Center"/>
                             <Label Text="{Binding Name}"
                                    Margin="12, 0, 0, 0"
                                    VerticalTextAlignment="Center"
                                    VerticalOptions="Fill"
-                                   HorizontalOptions="Fill"
-                                   BackgroundColor="Transparent">
+                                   BackgroundColor="Transparent"
+                                   x:Name="DirectoryNameLabel">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                                 </Label.GestureRecognizers>
                             </Label>
-                        </StackLayout>
+                            <Image IsVisible="{Binding IsSelected, Mode=OneWay}"
+                                   Margin="12, 0, 0, 0"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   VerticalOptions="Center"
+                                   Aspect="Center">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource Tick}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"/>
+                                </Image.Source>
+                            </Image>
+                        </HorizontalStackLayout>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
                 <BindableLayout.EmptyViewTemplate>

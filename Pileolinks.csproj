@@ -53,6 +53,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Folder Include="Models\" />
 	  <Folder Include="Services\Interfaces\" />
 	  <Folder Include="ViewModels\" />
