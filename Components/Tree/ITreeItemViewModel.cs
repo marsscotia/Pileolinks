@@ -11,7 +11,7 @@ namespace Pileolinks.Components.Tree
     {
         ITreeItem TreeItem { get; }
         int Depth { get; }
-        List<ITreeItemViewModel> Descendants { get; }
+        IReadOnlyCollection<ITreeItemViewModel> Descendants { get; }
         bool IsVisible { get; set; }
         string Id { get; }
         TreeItemType Type { get; }
@@ -31,5 +31,9 @@ namespace Pileolinks.Components.Tree
         bool IsNotSelected { get; }
 
         event EventHandler<ITreeItemViewModel> DescendantAdded;
+        event EventHandler Deleted;
+
+        void AddToDescendants(ITreeItemViewModel treeItemViewModel);
+        void RemoveDescendant(ITreeItemViewModel descendant);
     }
 }

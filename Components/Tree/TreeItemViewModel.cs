@@ -11,6 +11,7 @@ namespace Pileolinks.Components.Tree
     internal class TreeItemViewModel : BaseViewModel, ITreeItemViewModel
     {
         private readonly ITreeItem treeItem;
+        private readonly List<ITreeItemViewModel> descendants = new();
         private bool isVisible;
         private bool isExpanded;
         private int depth;
@@ -21,13 +22,13 @@ namespace Pileolinks.Components.Tree
 
         public TreeItemType Type => treeItem.Type;
 
-        public List<ITreeItemViewModel> Descendants { get; private set; } = new();
+        public IReadOnlyCollection<ITreeItemViewModel> Descendants { get; private set; }
 
         public ITreeItem Ancestor => treeItem.Ancestor;
 
         public bool HasAncestor => treeItem.HasAncestor;
 
-        public bool HasDescendants => treeItem.Descendants.Any();
+        public bool HasDescendants => Descendants.Any();
 
         public bool HasDirectories => treeItem.HasDirectories;
 
@@ -41,6 +42,7 @@ namespace Pileolinks.Components.Tree
         public Command CollapseCommand => collapseCommand ??= new Command(Collapse);
 
         public event EventHandler<ITreeItemViewModel> DescendantAdded;
+        public event EventHandler Deleted;
 
         public int Depth
         {
@@ -106,7 +108,9 @@ namespace Pileolinks.Components.Tree
         {
             treeItem = item;
             item.DescendantAdded += AddDescendant;
+            item.Deleted += Delete;
             Depth = CalculateDepth();
+            Descendants = descendants.AsReadOnly();
         }
 
         private int CalculateDepth()
@@ -137,6 +141,24 @@ namespace Pileolinks.Components.Tree
         private void AddDescendant(object sender, ITreeItem descendant)
         {
             TreeItemViewModel treeItemViewModel = new(descendant);
+            InsertIntoDescendants(treeItemViewModel);
+
+            IsExpanded = true;
+            DescendantAdded?.Invoke(this, treeItemViewModel);
+        }
+
+        private void Delete(object sender, EventArgs e)
+        {
+            Deleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void AddToDescendants(ITreeItemViewModel treeItemViewModel)
+        {
+            InsertIntoDescendants(treeItemViewModel);
+        }
+
+        private void InsertIntoDescendants(ITreeItemViewModel treeItemViewModel)
+        {
             int count = 0;
             ITreeItemViewModel found = null;
 
@@ -150,21 +172,30 @@ namespace Pileolinks.Components.Tree
             }
             if (found != null)
             {
-                Descendants.Insert(Descendants.IndexOf(found), treeItemViewModel);
+                descendants.Insert(descendants.IndexOf(found), treeItemViewModel);
             }
             else
             {
-                Descendants.Add(treeItemViewModel);
+                descendants.Add(treeItemViewModel);
             }
 
-            IsExpanded = true;
             OnPropertyChanged(nameof(HasDescendants));
             OnPropertyChanged(nameof(CanExpandAndIsExpanded));
             OnPropertyChanged(nameof(CanExpandAndIsNotExpanded));
             OnPropertyChanged(nameof(CannotExpand));
-            
+        }
 
-            DescendantAdded?.Invoke(this, treeItemViewModel);
+        public void RemoveDescendant(ITreeItemViewModel descendant)
+        {
+            descendants.Remove(descendant);
+            if (!descendants.Any())
+            {
+                IsExpanded = false;
+            }
+            OnPropertyChanged(nameof(HasDescendants));
+            OnPropertyChanged(nameof(CanExpandAndIsExpanded));
+            OnPropertyChanged(nameof(CanExpandAndIsNotExpanded));
+            OnPropertyChanged(nameof(CannotExpand));
         }
 
     }

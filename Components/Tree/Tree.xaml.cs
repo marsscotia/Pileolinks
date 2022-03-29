@@ -115,9 +115,57 @@ public partial class Tree : ContentView
         SelectedItem = ((ITreeItemViewModel)((Label)sender).BindingContext).TreeItem;
     }
 
+    private void ItemDeleted(object sender, EventArgs e)
+    {
+        ITreeItemViewModel selected = sender as ITreeItemViewModel;
+        Stack<ITreeItemViewModel> stack = new();
+        stack.Push(selected);
+
+        List<string> ids = new();
+
+        while (stack.Any())
+        {
+            ITreeItemViewModel current = stack.Pop();
+
+            ids.Add(current.Id);
+
+            foreach (ITreeItemViewModel item in current.Descendants)
+            {
+                stack.Push(item);
+            }
+        }
+
+        foreach (string id in ids)
+        {
+            ITreeItemViewModel treeItemViewModel = ItemsSource.FirstOrDefault(i => i.Id == id);
+            if (treeItemViewModel is not null)
+            {
+                if (SelectedItem == treeItemViewModel.TreeItem)
+                {
+                    SelectedItem = null;
+                }
+                treeItemViewModel.DescendantAdded -= AddDescendant;
+                treeItemViewModel.Deleted -= ItemDeleted;
+                _ = ItemsSource.Remove(treeItemViewModel);
+            }
+        }
+
+        if (selected.HasAncestor)
+        {
+            ITreeItemViewModel ancestor = ItemsSource.FirstOrDefault(i => i.Id == selected.Ancestor.Id);
+            if (ancestor is not null)
+            {
+                ancestor.RemoveDescendant(selected);
+            }
+        }
+
+
+    }
+
     private void AddDescendant(object sender, ITreeItemViewModel treeItemViewModel)
     {
         treeItemViewModel.DescendantAdded += AddDescendant;
+        treeItemViewModel.Deleted += ItemDeleted;
 
         ITreeItemViewModel ancestor = sender as ITreeItemViewModel;
         int ancestorIndex = ItemsSource.IndexOf(ancestor);
@@ -184,6 +232,7 @@ public partial class Tree : ContentView
             ITreeItem current = stack.Pop();
             TreeItemViewModel treeItemViewModel = new(current);
             treeItemViewModel.DescendantAdded += AddDescendant;
+            treeItemViewModel.Deleted += ItemDeleted;
             ItemsSource.Add(treeItemViewModel);
 
             foreach (ITreeItem item in current.Directories.OrderByDescending(i => i.Name))
@@ -197,40 +246,15 @@ public partial class Tree : ContentView
             if (item.HasAncestor)
             {
                 ITreeItemViewModel ancestor = ItemsSource.FirstOrDefault(i => i.Id == item.Ancestor.Id);
-                InsertIntoDescendants(item, ancestor.Descendants);
+                ancestor.AddToDescendants(item);
             }
             else
             {
                 item.IsVisible = true;
             }
         }
-    }
 
-    private static void InsertIntoDescendants(ITreeItemViewModel descendant, List<ITreeItemViewModel> descendants)
-    {
-        if (!descendants.Any())
-        {
-            descendants.Add(descendant);
-        }
-        else
-        {
-            bool found = false;
-            int counter = 0;
-            while (!found && counter < descendants.Count)
-            {
-                ITreeItemViewModel current = descendants[counter];
-                if (string.Compare(descendant.Name, current.Name) <= 0)
-                {
-                    found = true;
-                    descendants.Insert(counter, descendant);
-                }
-                counter++;
-            }
-            if (!found)
-            {
-                descendants.Add(descendant);
-            }
-        }
+        OnPropertyChanged(nameof(ItemsSource));
     }
 }
 

@@ -17,6 +17,10 @@
             <x:String x:Key="RightChevron">&#xf2ae;</x:String>
             <x:String x:Key="DownChevron">&#xf2a1;</x:String>
             <x:String x:Key="Tick">&#xf293;</x:String>
+            <x:String x:Key="Bin">&#xf34c;</x:String>
+            <x:String x:Key="Pencil">&#xf3dc;</x:String>
+            <x:String x:Key="AddFolder">&#xf41e;</x:String>
+            <x:String x:Key="Plus">&#xf107;</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

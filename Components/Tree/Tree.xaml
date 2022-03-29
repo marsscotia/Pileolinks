@@ -8,10 +8,11 @@
         <tree:DepthToMarginConverter x:Key="DepthToMarginConverter"></tree:DepthToMarginConverter>
     </ContentView.Resources>
     <ContentView.Content>
-        <ScrollView>
-            <StackLayout Orientation="Vertical"
-                         BindingContext="{x:Reference this}"
-                         BindableLayout.ItemsSource="{Binding ItemsSource, Mode=OneWay}">
+
+        <ScrollView Grid.ColumnSpan="3">
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ItemsSource, Mode=OneWay}"
+                                     BindingContext="{x:Reference this}"
+                            >
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="tree:ITreeItemViewModel">
                         <HorizontalStackLayout 
@@ -20,7 +21,7 @@
                                      >
                             <Image x:Name="ExpandButton"
                                     IsVisible="{Binding CanExpandAndIsNotExpanded, Mode=OneWay}"
-                                         VerticalOptions="Center"
+                                         VerticalOptions="End"
                                    HeightRequest="48"
                                    WidthRequest="48"
                                    Aspect="Center">
@@ -37,7 +38,7 @@
                             </Image>
                             <Image x:Name="CollapseButton"
                                     IsVisible="{Binding CanExpandAndIsExpanded, Mode=OneWay}"
-                                         VerticalOptions="Center"
+                                         VerticalOptions="End"
                                    HeightRequest="48"
                                    WidthRequest="48"
                                    Aspect="Center">
@@ -80,8 +81,8 @@
                                 </Image.Source>
                             </Image>
                         </HorizontalStackLayout>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
                 <BindableLayout.EmptyViewTemplate>
                     <DataTemplate>
                         <Label HorizontalOptions="Center"
@@ -89,7 +90,7 @@
                                Text="Nothing to see here, move along." />
                     </DataTemplate>
                 </BindableLayout.EmptyViewTemplate>
-        </StackLayout>
+            </VerticalStackLayout>
         </ScrollView>
     </ContentView.Content>
 </ContentView>

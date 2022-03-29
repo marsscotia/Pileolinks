@@ -26,6 +26,7 @@ namespace Pileolinks.Models
         public bool HasDirectories => Descendants != null && Descendants.Any(d => d.Type == TreeItemType.Directory);
 
         public event EventHandler<ITreeItem> DescendantAdded;
+        public event EventHandler Deleted;
 
         public LinkDirectory(string id, ITreeItem parent, string name, List<ITreeItem> descendants)
         {
@@ -57,6 +58,11 @@ namespace Pileolinks.Models
         public ITreeItem GetDescendant(string name)
         {
             return Descendants.FirstOrDefault(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public void Delete()
+        {
+            Deleted?.Invoke(this, EventArgs.Empty);
         }
 
     }

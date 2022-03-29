@@ -9,8 +9,15 @@ namespace Pileolinks.ViewModels
     {
         private ObservableCollection<ITreeItem> items = new();
         private ITreeItem selected;
-        private string categoryName, collectionName;
-        private Command addCategoryCommand, addCollectionCommand;
+        private Command requestDeleteDirectoryCommand, requestAddDirectoryCommand, requestAddCollectionCommand;
+        private Command<ITreeItem> deleteDirectoryCommand;
+        private Command<string> addDirectoryCommand, addCollectionCommand;
+        
+
+        public event EventHandler<ITreeItem> DeleteRequested;
+        public event EventHandler AddDirectoryRequested;
+        public event EventHandler AddCollectionRequested;
+        public event EventHandler<AlertEventArgs> AlertRequested;
 
         public ObservableCollection<ITreeItem> Items
         {
@@ -25,27 +32,22 @@ namespace Pileolinks.ViewModels
             {
                 SetProperty(ref selected, value);
                 OnPropertyChanged(nameof(SelectedSummary));
+                OnPropertyChanged(nameof(HasSelected));
             }
-        }
-
-        public string CategoryName
-        {
-            get => categoryName;
-            set => SetProperty(ref categoryName, value);
-        }
-
-        public string CollectionName
-        {
-            get => collectionName;
-            set => SetProperty(ref collectionName, value);
         }
 
         public string SelectedSummary => Selected == null ?
                     "There is no currently selected directory" :
                     $"{Selected.Name} is the currently selected directory";
 
-        public Command AddDirectoryCommand => addCategoryCommand ??= new Command(AddDirectory);
-        public Command AddCollectionCommand => addCollectionCommand ??= new Command(AddCollection);
+        public bool HasSelected => Selected != null;
+
+        public Command<string> AddDirectoryCommand => addDirectoryCommand ??= new Command<string>(AddDirectory);
+        public Command<string> AddCollectionCommand => addCollectionCommand ??= new Command<string>(AddCollection);
+        public Command<ITreeItem> DeleteCommand => deleteDirectoryCommand ??= new Command<ITreeItem>(Delete);
+        public Command RequestDeleteDirectoryCommand => requestDeleteDirectoryCommand ??= new Command(RequestDelete);
+        public Command RequestAddDirectoryCommand => requestAddDirectoryCommand ??= new Command(RequestAddDirectory);
+        public Command RequestAddCollectionCommand => requestAddCollectionCommand ??= new Command(RequestAddCollection);
 
         public MainPageViewModel()
         {
@@ -57,27 +59,44 @@ namespace Pileolinks.ViewModels
             Items = items;
         }
 
-        private void AddDirectory()
+        private void AddDirectory(string name)
         {
-            if (Selected != null && !string.IsNullOrWhiteSpace(CategoryName))
+            if (Selected != null && !string.IsNullOrWhiteSpace(name))
             {
-                Selected.AddDirectory(CategoryName); 
+                bool valid = Selected.AddDirectory(name);
+                if (!valid)
+                {
+                    AlertRequested?.Invoke(this, new AlertEventArgs
+                    {
+                        Title = "Directory Exists",
+                        Message = "There's a directory here with that name already. Why not try another?",
+                        ConfirmButton = "OK"
+                    });
+                }
             }
-            CategoryName = string.Empty;
+            else if (string.IsNullOrWhiteSpace(name))
+            {
+                AlertRequested.Invoke(this, new AlertEventArgs
+                {
+                    Title = "Missing Name",
+                    Message = "Please supply a name for the directory",
+                    ConfirmButton = "OK"
+                });
+            }
         }
 
-        private void AddCollection()
+        private void AddCollection(string name)
         {
-            if (!string.IsNullOrWhiteSpace(CollectionName))
+            if (!string.IsNullOrWhiteSpace(name))
             {
-                if (!Items.Any(i => i.Name.Equals(CollectionName, StringComparison.OrdinalIgnoreCase)))
+                if (!Items.Any(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    LinkDirectory linkDirectory = new(Guid.NewGuid().ToString(), null, CollectionName, new List<ITreeItem>());
+                    LinkDirectory linkDirectory = new(Guid.NewGuid().ToString(), null, name, new List<ITreeItem>());
                     int count = 0;
                     ITreeItem found = null;
                     while(found == null && count < Items.Count)
                     {
-                        if (string.Compare(CollectionName, Items.ElementAt(count).Name, StringComparison.OrdinalIgnoreCase) <= 0)
+                        if (string.Compare(name, Items.ElementAt(count).Name, StringComparison.OrdinalIgnoreCase) <= 0)
                         {
                             found = Items.ElementAt(count);
                         }
@@ -91,9 +110,60 @@ namespace Pileolinks.ViewModels
                     {
                         Items.Insert(Items.IndexOf(found), linkDirectory);
                     }
-                    CollectionName = String.Empty;
+                }
+                else
+                {
+                    AlertRequested?.Invoke(this, new AlertEventArgs
+                    {
+                        Title = "Collection Exists",
+                        Message = "There's a collection with that name here already. Why not try another?",
+                        ConfirmButton = "OK"
+                    });
                 }
             }
+            else
+            {
+                AlertRequested?.Invoke(this, new AlertEventArgs
+                {
+                    Title = "Missing Name",
+                    Message = "Please supply a name for the collection",
+                    ConfirmButton = "OK"
+                });
+            }
+        }
+
+        private void Delete(ITreeItem selected)
+        {
+            selected.Delete();
+            if (selected.HasAncestor)
+            {
+                _ = selected.Ancestor.Descendants.Remove(selected);
+            }
+            else
+            {
+                _ = Items.Remove(selected);
+            }
+        }
+
+        private void RequestDelete()
+        {
+            if (Selected is not null)
+            {
+                DeleteRequested?.Invoke(this, Selected);
+            }
+        }
+
+        private void RequestAddDirectory()
+        {
+            if (Selected is not null)
+            {
+                AddDirectoryRequested?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void RequestAddCollection()
+        {
+            AddCollectionRequested?.Invoke(this, EventArgs.Empty);
         }
 
     }

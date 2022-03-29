@@ -7,34 +7,73 @@
              x:DataType="viewmodels:MainPageViewModel">
 
     
-        <Grid RowSpacing="25" ColumnDefinitions="*, *"
+        <Grid RowSpacing="25" 
+              ColumnDefinitions="48, 48, 48, 48, *"
+              RowDefinitions="*, 48"
               Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
 
-        <tree:Tree Items="{Binding Items, Mode=OneWay}"
-                   SelectedItem="{Binding Selected}"/>
+            <tree:Tree Items="{Binding Items, Mode=OneWay}"
+                   SelectedItem="{Binding Selected}"
+                   Grid.ColumnSpan="5"/>
+        
+            <ImageButton Grid.Row="1"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         Command="{Binding RequestAddCollectionCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Plus}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
 
-        <StackLayout Orientation="Vertical"
-                     Grid.Column="1"
-                     Spacing="8">
-            <Label Text="Add a directory" />
+        <ImageButton Grid.Row="1"
+                         Grid.Column="1"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         Command="{Binding RequestAddDirectoryCommand}"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                     Padding="4">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource AddFolder}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+        </ImageButton>
 
-            <Label Text="{Binding SelectedSummary, Mode=OneWay}" />
-            <Entry Text="{Binding CategoryName, Mode=TwoWay}"
-                   TextColor="{StaticResource PrimaryColor}"
-                   BackgroundColor="LightSteelBlue"
-                   Placeholder="Type a directory name here"/>
-            <Button Text="Add directory"
-                    Command="{Binding AddDirectoryCommand}"
-                    TextColor="{StaticResource PrimaryColor}"/>
-            <Label Text="Add a collection" />
-            <Entry Text="{Binding CollectionName, Mode=TwoWay}"
-                   TextColor="{StaticResource PrimaryColor}"
-                   BackgroundColor="LightSteelBlue"
-                   Placeholder="Type a collection name here"/>
-            <Button Text="Add Collection"
-                    Command="{Binding AddCollectionCommand}"
-                    TextColor="{StaticResource PrimaryColor}" />
-        </StackLayout>
+        <ImageButton Grid.Row="1"
+                         Grid.Column="2"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Pencil}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
+
+            <ImageButton Grid.Row="1"
+                         Grid.Column="3"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                         Command="{Binding RequestDeleteDirectoryCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Bin}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
+
 
     </Grid>
     
