@@ -6,10 +6,22 @@ namespace Pileolinks.Models
     {
         private readonly string id;
         private ITreeItem parent;
+        private string name = string.Empty;
 
         public string Id => id;
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (!name.Equals(value))
+                {
+                    name = value;
+                    NameChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
 
         public TreeItemType Type => TreeItemType.Directory;
 
@@ -28,6 +40,7 @@ namespace Pileolinks.Models
         public event EventHandler<ITreeItem> DescendantAdded;
         public event EventHandler Deleted;
         public event EventHandler<ITreeItem> Moved;
+        public event EventHandler NameChanged;
 
         public LinkDirectory(string id, ITreeItem parent, string name, List<ITreeItem> descendants)
         {
@@ -94,6 +107,9 @@ namespace Pileolinks.Models
             Deleted?.Invoke(this, EventArgs.Empty);
         }
 
-
+        public void Rename(string name)
+        {
+            Name = name;
+        }
     }
 }

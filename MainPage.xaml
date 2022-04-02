@@ -14,7 +14,8 @@
 
             <tree:Tree Items="{Binding Items, Mode=OneWay}"
                    SelectedItem="{Binding Selected}"
-                   Grid.ColumnSpan="5"/>
+                   Grid.ColumnSpan="5"
+                       InvalidMoveRequested="Tree_InvalidMoveRequested"/>
         
             <ImageButton Grid.Row="1"
                          BackgroundColor="{StaticResource PrimaryColor}"
@@ -49,7 +50,8 @@
                          Grid.Column="2"
                          BackgroundColor="{StaticResource PrimaryColor}"
                          Aspect="Center"
-                         IsVisible="{Binding HasSelected, Mode=OneWay}">
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                     Command="{Binding RequestRenameDirectoryCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Pencil}"
                                      FontFamily="Fluent"

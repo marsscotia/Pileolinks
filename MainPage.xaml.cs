@@ -13,6 +13,16 @@ public partial class MainPage : ContentPage
         ViewModel.AlertRequested += ViewModel_AlertRequested;
         ViewModel.AddCollectionRequested += ViewModel_AddCollectionRequested;
         ViewModel.AddDirectoryRequested += ViewModel_AddDirectoryRequested;
+        ViewModel.RenameRequested += ViewModel_RenameRequested;
+    }
+
+    private async void ViewModel_RenameRequested(object sender, EventArgs e)
+    {
+        string name = await DisplayPromptAsync("New Name", "What would you like to call the directory?");
+        if (name is not null)
+        {
+            ViewModel.RenameDirectoryCommand.Execute(name);
+        }
     }
 
     private async void ViewModel_AddDirectoryRequested(object sender, EventArgs e)
@@ -45,6 +55,11 @@ public partial class MainPage : ContentPage
         {
             ViewModel.DeleteCommand.Execute(e);
         }
+    }
+
+    private async void Tree_InvalidMoveRequested(object sender, string e)
+    {
+        await DisplayAlert("Impossible Move", e, "OK");
     }
 }
 

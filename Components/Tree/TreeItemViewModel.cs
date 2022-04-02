@@ -118,6 +118,7 @@ namespace Pileolinks.Components.Tree
             item.DescendantAdded += AddDescendant;
             item.Deleted += Delete;
             item.Moved += MoveItem;
+            item.NameChanged += Rename;
             Depth = CalculateDepth();
             Descendants = descendants.AsReadOnly();
         }
@@ -164,6 +165,11 @@ namespace Pileolinks.Components.Tree
         public void AddToDescendants(ITreeItemViewModel treeItemViewModel)
         {
             InsertIntoDescendants(treeItemViewModel);
+        }
+
+        private void Rename(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(Name));
         }
 
         private void InsertIntoDescendants(ITreeItemViewModel treeItemViewModel)

@@ -12,6 +12,8 @@ public partial class Tree : ContentView
         BindableProperty.Create(nameof(SelectedItem), typeof(ITreeItem), typeof(Tree), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnSelectedItemChanged);
 
     private System.Timers.Timer ExpandTimer;
+
+    public event EventHandler<string> InvalidMoveRequested;
     public ObservableCollection<ITreeItemViewModel> ItemsSource { get; private set; } = new();
 
     public ObservableCollection<ITreeItem> Items
@@ -286,7 +288,7 @@ public partial class Tree : ContentView
         bool valid = dropped.TreeItem.MoveToDirectory(selected.TreeItem);
         if (!valid)
         {
-            //TODO: raise event to warn user of invalid move
+            InvalidMoveRequested.Invoke(this, "That directory can't be moved there, there's a directory with the same name already there.");
         }
         e.Handled = true;
     }

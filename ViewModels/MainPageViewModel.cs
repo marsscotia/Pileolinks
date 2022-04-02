@@ -9,14 +9,15 @@ namespace Pileolinks.ViewModels
     {
         private ObservableCollection<ITreeItem> items = new();
         private ITreeItem selected;
-        private Command requestDeleteDirectoryCommand, requestAddDirectoryCommand, requestAddCollectionCommand;
+        private Command requestDeleteDirectoryCommand, requestAddDirectoryCommand, requestAddCollectionCommand, requestRenameDirectoryCommand;
         private Command<ITreeItem> deleteDirectoryCommand;
-        private Command<string> addDirectoryCommand, addCollectionCommand;
+        private Command<string> addDirectoryCommand, addCollectionCommand, renameDirectoryCommand;
         
 
         public event EventHandler<ITreeItem> DeleteRequested;
         public event EventHandler AddDirectoryRequested;
         public event EventHandler AddCollectionRequested;
+        public event EventHandler RenameRequested;
         public event EventHandler<AlertEventArgs> AlertRequested;
 
         public ObservableCollection<ITreeItem> Items
@@ -48,6 +49,8 @@ namespace Pileolinks.ViewModels
         public Command RequestDeleteDirectoryCommand => requestDeleteDirectoryCommand ??= new Command(RequestDelete);
         public Command RequestAddDirectoryCommand => requestAddDirectoryCommand ??= new Command(RequestAddDirectory);
         public Command RequestAddCollectionCommand => requestAddCollectionCommand ??= new Command(RequestAddCollection);
+        public Command RequestRenameDirectoryCommand => requestRenameDirectoryCommand ??= new Command(RequestRenameDirectory);
+        public Command<string> RenameDirectoryCommand => renameDirectoryCommand ??= new Command<string>(RenameDirectory);
 
         public MainPageViewModel()
         {
@@ -161,9 +164,53 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        private void RequestRenameDirectory()
+        {
+            if (Selected is not null)
+            {
+                RenameRequested?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
         private void RequestAddCollection()
         {
             AddCollectionRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RenameDirectory(string name)
+        {
+            if (Selected.HasAncestor)
+            {
+                if (Selected.Ancestor.Directories.Any(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    AlertRequested?.Invoke(this, new AlertEventArgs
+                    {
+                        Title = "Same Name",
+                        Message = "There's already a directory with that name here. Why not try another?",
+                        ConfirmButton = "OK"
+                    });
+                }
+                else
+                {
+                    Selected.Rename(name);
+                }
+            }
+            else
+            {
+                if (Items.Any(i => i.Name.Equals(name)))
+                {
+                    AlertRequested?.Invoke(this, new AlertEventArgs
+                    {
+                        Title = "Same Name",
+                        Message = "There's already a directory with that name here. Why not try another?",
+                        ConfirmButton = "OK"
+                    });
+                }
+                else
+                {
+                    Selected.Rename(name);
+                }
+            }
         }
 
     }
