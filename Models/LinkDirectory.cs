@@ -5,7 +5,7 @@ namespace Pileolinks.Models
     internal class LinkDirectory : ITreeItem
     {
         private readonly string id;
-        private readonly ITreeItem parent;
+        private ITreeItem parent;
 
         public string Id => id;
 
@@ -27,6 +27,7 @@ namespace Pileolinks.Models
 
         public event EventHandler<ITreeItem> DescendantAdded;
         public event EventHandler Deleted;
+        public event EventHandler<ITreeItem> Moved;
 
         public LinkDirectory(string id, ITreeItem parent, string name, List<ITreeItem> descendants)
         {
@@ -55,6 +56,34 @@ namespace Pileolinks.Models
             return result;
         }
 
+        public bool MoveToDirectory(ITreeItem directory)
+        {
+            if (directory.Type != TreeItemType.Directory)
+            {
+                throw new ArgumentException("The specified directory must be of type directory");
+            }
+
+            bool result;
+
+            if (directory.Descendants.Any(d => d.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = false;
+            }
+            else
+            {
+                if (HasAncestor)
+                {
+                    Ancestor.Descendants.Remove(this); 
+                }
+                directory.Descendants.Add(this);
+                parent = directory;
+                Moved?.Invoke(this, directory);
+                result = true;
+            }
+
+            return result;
+        }
+
         public ITreeItem GetDescendant(string name)
         {
             return Descendants.FirstOrDefault(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
@@ -64,6 +93,7 @@ namespace Pileolinks.Models
         {
             Deleted?.Invoke(this, EventArgs.Empty);
         }
+
 
     }
 }

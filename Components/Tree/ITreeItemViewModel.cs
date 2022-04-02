@@ -29,11 +29,14 @@ namespace Pileolinks.Components.Tree
         Command ExpandCommand { get; }
         bool IsSelected { get; set; }
         bool IsNotSelected { get; }
+        bool IsHovered { get; set; }
 
         event EventHandler<ITreeItemViewModel> DescendantAdded;
         event EventHandler Deleted;
+        event EventHandler<ITreeItem> ItemMoved;
 
         void AddToDescendants(ITreeItemViewModel treeItemViewModel);
+        void RecalculateDepth();
         void RemoveDescendant(ITreeItemViewModel descendant);
     }
 }

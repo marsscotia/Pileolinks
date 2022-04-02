@@ -26,8 +26,10 @@ namespace Pileolinks.Components.Tree
 
         event EventHandler<ITreeItem> DescendantAdded;
         event EventHandler Deleted;
+        event EventHandler<ITreeItem> Moved;
 
         bool AddDirectory(string name);
         void Delete();
+        bool MoveToDirectory(ITreeItem directory);
     }
 }

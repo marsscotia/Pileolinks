@@ -16,6 +16,7 @@ namespace Pileolinks.Components.Tree
         private bool isExpanded;
         private int depth;
         private bool isSelected;
+        private bool isHovered;
         private Command expandCommand;
         private Command collapseCommand;
         public string Id => treeItem.Id;
@@ -43,6 +44,7 @@ namespace Pileolinks.Components.Tree
 
         public event EventHandler<ITreeItemViewModel> DescendantAdded;
         public event EventHandler Deleted;
+        public event EventHandler<ITreeItem> ItemMoved;
 
         public int Depth
         {
@@ -98,6 +100,12 @@ namespace Pileolinks.Components.Tree
             }
         }
 
+        public bool IsHovered
+        {
+            get => isHovered;
+            set => SetProperty(ref isHovered, value);
+        }
+
         public bool IsNotSelected => !IsSelected;
 
         public bool CanExpandAndIsExpanded => HasDescendants && IsExpanded;
@@ -109,6 +117,7 @@ namespace Pileolinks.Components.Tree
             treeItem = item;
             item.DescendantAdded += AddDescendant;
             item.Deleted += Delete;
+            item.Moved += MoveItem;
             Depth = CalculateDepth();
             Descendants = descendants.AsReadOnly();
         }
@@ -183,6 +192,21 @@ namespace Pileolinks.Components.Tree
             OnPropertyChanged(nameof(CanExpandAndIsExpanded));
             OnPropertyChanged(nameof(CanExpandAndIsNotExpanded));
             OnPropertyChanged(nameof(CannotExpand));
+        }
+
+        private void MoveItem(object sender, ITreeItem newAncestor)
+        {
+            RecalculateDepth();
+            ItemMoved?.Invoke(this, newAncestor);
+        }
+
+        public void RecalculateDepth()
+        {
+            Depth = CalculateDepth();
+            foreach (var item in Descendants)
+            {
+                item.RecalculateDepth();
+            }
         }
 
         public void RemoveDescendant(ITreeItemViewModel descendant)

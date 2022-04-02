@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Timers;
 
 namespace Pileolinks.Components.Tree;
 
@@ -10,6 +11,7 @@ public partial class Tree : ContentView
     public static readonly BindableProperty SelectedItemProperty =
         BindableProperty.Create(nameof(SelectedItem), typeof(ITreeItem), typeof(Tree), defaultBindingMode: BindingMode.TwoWay, propertyChanged: OnSelectedItemChanged);
 
+    private System.Timers.Timer ExpandTimer;
     public ObservableCollection<ITreeItemViewModel> ItemsSource { get; private set; } = new();
 
     public ObservableCollection<ITreeItem> Items
@@ -49,6 +51,8 @@ public partial class Tree : ContentView
     {
         TreeItemViewModel treeItemViewModel = new(treeItem);
         treeItemViewModel.DescendantAdded += AddDescendant;
+        treeItemViewModel.Deleted += ItemDeleted;
+        treeItemViewModel.ItemMoved += MoveItem;
         treeItemViewModel.IsVisible = true;
 
         int count = 0;
@@ -146,6 +150,7 @@ public partial class Tree : ContentView
                 }
                 treeItemViewModel.DescendantAdded -= AddDescendant;
                 treeItemViewModel.Deleted -= ItemDeleted;
+                treeItemViewModel.ItemMoved -= MoveItem;
                 _ = ItemsSource.Remove(treeItemViewModel);
             }
         }
@@ -162,12 +167,8 @@ public partial class Tree : ContentView
 
     }
 
-    private void AddDescendant(object sender, ITreeItemViewModel treeItemViewModel)
+    private int AddDescendant(ITreeItemViewModel ancestor, ITreeItemViewModel treeItemViewModel)
     {
-        treeItemViewModel.DescendantAdded += AddDescendant;
-        treeItemViewModel.Deleted += ItemDeleted;
-
-        ITreeItemViewModel ancestor = sender as ITreeItemViewModel;
         int ancestorIndex = ItemsSource.IndexOf(ancestor);
         IEnumerable<ITreeItemViewModel> siblings = ItemsSource.Where(i => i.Depth == treeItemViewModel.Depth && i.Ancestor == treeItemViewModel.Ancestor);
         if (siblings.Any())
@@ -184,7 +185,7 @@ public partial class Tree : ContentView
             }
             if (found == null)
             {
-                IEnumerable<ITreeItemViewModel> laterAncestors = ItemsSource.Where(i => i.Depth == ancestor.Depth && ItemsSource.IndexOf(i) > ancestorIndex);
+                IEnumerable<ITreeItemViewModel> laterAncestors = ItemsSource.Where(i => i.Depth <= ancestor.Depth && ItemsSource.IndexOf(i) > ancestorIndex);
                 if (laterAncestors.Any())
                 {
                     int minLaterAncestorIndex = laterAncestors.Select(i => ItemsSource.IndexOf(i)).Min();
@@ -214,7 +215,18 @@ public partial class Tree : ContentView
             }
         }
         treeItemViewModel.IsVisible = ancestor.IsVisible && ancestor.CanExpandAndIsExpanded;
+        return ItemsSource.IndexOf(treeItemViewModel);
+    }
 
+    private void AddDescendant(object sender, ITreeItemViewModel treeItemViewModel)
+    {
+        treeItemViewModel.DescendantAdded += AddDescendant;
+        treeItemViewModel.Deleted += ItemDeleted;
+        treeItemViewModel.ItemMoved += MoveItem;
+
+        ITreeItemViewModel ancestor = sender as ITreeItemViewModel;
+        
+        _ = AddDescendant(ancestor, treeItemViewModel);
     }
 
     private void PopulateItems(ObservableCollection<ITreeItem> items)
@@ -233,6 +245,7 @@ public partial class Tree : ContentView
             TreeItemViewModel treeItemViewModel = new(current);
             treeItemViewModel.DescendantAdded += AddDescendant;
             treeItemViewModel.Deleted += ItemDeleted;
+            treeItemViewModel.ItemMoved += MoveItem;
             ItemsSource.Add(treeItemViewModel);
 
             foreach (ITreeItem item in current.Directories.OrderByDescending(i => i.Name))
@@ -255,6 +268,100 @@ public partial class Tree : ContentView
         }
 
         OnPropertyChanged(nameof(ItemsSource));
+    }
+
+    private void DragGestureRecognizer_DragStarting(object sender, DragStartingEventArgs e)
+    {
+        Label label = (sender as Element).Parent as Label;
+        ITreeItemViewModel selected = label.BindingContext as ITreeItemViewModel;
+        e.Data.Properties.Add("ITreeItemViewModel", selected);
+    }
+
+    private void DropGestureRecognizer_Drop(object sender, DropEventArgs e)
+    {
+        Label label = (sender as Element).Parent as Label;
+        ITreeItemViewModel selected = label.BindingContext as ITreeItemViewModel;
+        ITreeItemViewModel dropped = e.Data.Properties["ITreeItemViewModel"] as ITreeItemViewModel;
+        selected.IsHovered = false;
+        bool valid = dropped.TreeItem.MoveToDirectory(selected.TreeItem);
+        if (!valid)
+        {
+            //TODO: raise event to warn user of invalid move
+        }
+        e.Handled = true;
+    }
+
+    private void DropGestureRecognizer_DragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Copy;
+        Label label = (sender as Element).Parent as Label;
+        ITreeItemViewModel selected = label.BindingContext as ITreeItemViewModel;
+        selected.IsHovered = true;
+        ExpandTimer = new(1000);
+        ExpandTimer.Elapsed += (s, e) =>
+        {
+            if (selected.CanExpandAndIsNotExpanded)
+            {
+                selected.IsExpanded = true;
+                ExpandTimer.Stop();
+                ExpandTimer.Dispose();
+            }
+        };
+        ExpandTimer.AutoReset = false;
+        ExpandTimer.Start();
+    }
+
+    private void DropGestureRecognizer_DragLeave(object sender, DragEventArgs e)
+    {
+        Label label = (sender as Element).Parent as Label;
+        ITreeItemViewModel selected = label.BindingContext as ITreeItemViewModel;
+        selected.IsHovered = false;
+        if (ExpandTimer != null && ExpandTimer.Enabled)
+        {
+            ExpandTimer.Stop();
+            ExpandTimer.Dispose();
+        }
+    }
+
+    private void MoveItem(object sender, ITreeItem newAncestor)
+    {
+        ITreeItemViewModel moved = sender as ITreeItemViewModel;
+        
+        ITreeItemViewModel newAncestorViewModel = ItemsSource.First(t => t.Id == newAncestor.Id);
+        ITreeItemViewModel oldAncestor = ItemsSource.FirstOrDefault(t => t.Descendants.Any(d => d.Id == moved.Id));
+        if (oldAncestor is not null)
+        {
+            oldAncestor.RemoveDescendant(moved); 
+        }
+        _ = ItemsSource.Remove(moved);
+        newAncestorViewModel.AddToDescendants(moved);
+        int newIndex = AddDescendant(newAncestorViewModel, moved);
+
+        List<ITreeItemViewModel> moving = new();
+        Stack<ITreeItemViewModel> stack = new();
+
+        foreach (ITreeItemViewModel treeItemViewModel in moved.Descendants.OrderByDescending(i => i.Name))
+        {
+            stack.Push(treeItemViewModel);
+        }
+
+        while (stack.Any())
+        {
+            ITreeItemViewModel current = stack.Pop();
+            moving.Add(current);
+
+            foreach (ITreeItemViewModel treeItemViewModel in current.Descendants.OrderByDescending(i => i.Name))
+            {
+                stack.Push(treeItemViewModel);
+            }
+        }
+
+        foreach (ITreeItemViewModel item in moving)
+        {
+            ItemsSource.Move(ItemsSource.IndexOf(item), newIndex + 1);
+            newIndex++;
+        }
+
     }
 }
 
