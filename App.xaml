@@ -6,20 +6,22 @@
         <ResourceDictionary>
 
             <Color x:Key="PrimaryColor">#512bdf</Color>
+            <Color x:Key="PrimaryFaintColor">#b58fff</Color>
             <Color x:Key="SecondaryColor">White</Color>
 
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="TextColor"
+                        Value="{StaticResource PrimaryColor}" />
             </Style>
 
-            <Style TargetType="Button">
-                <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
-                <Setter Property="FontFamily" Value="OpenSansRegular" />
-                <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryColor}" />
-                <Setter Property="Padding" Value="14,10" />
-            </Style>
-
+            <x:String x:Key="ThreeDotMenu">&#xf558;</x:String>
+            <x:String x:Key="RightChevron">&#xf2ae;</x:String>
+            <x:String x:Key="DownChevron">&#xf2a1;</x:String>
+            <x:String x:Key="Tick">&#xf293;</x:String>
+            <x:String x:Key="Bin">&#xf34c;</x:String>
+            <x:String x:Key="Pencil">&#xf3dc;</x:String>
+            <x:String x:Key="AddFolder">&#xf41e;</x:String>
+            <x:String x:Key="Plus">&#xf107;</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

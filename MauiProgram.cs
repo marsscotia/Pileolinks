@@ -1,4 +1,6 @@
-﻿namespace Pileolinks;
+﻿using CommunityToolkit.Maui;
+
+namespace Pileolinks;
 
 public static class MauiProgram
 {
@@ -7,9 +9,11 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+			.UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+				fonts.AddFont("FluentSystemIcons-Regular.ttf", "Fluent");
 			});
 
 		return builder.Build();

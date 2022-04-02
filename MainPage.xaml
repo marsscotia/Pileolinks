@@ -1,50 +1,82 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:tree="clr-namespace:Pileolinks.Components.Tree"
              x:Class="Pileolinks.MainPage"
-             BackgroundColor="{DynamicResource SecondaryColor}">
+             BackgroundColor="{DynamicResource SecondaryColor}"
+             x:DataType="viewmodels:MainPageViewModel">
 
-    <ScrollView>
-        <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
+    
+        <Grid RowSpacing="25" 
+              ColumnDefinitions="48, 48, 48, 48, *"
+              RowDefinitions="*, 48"
               Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
 
-            <Label 
-                Text="Hello, World!"
-                Grid.Row="0"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+            <tree:Tree Items="{Binding Items, Mode=OneWay}"
+                   SelectedItem="{Binding Selected}"
+                   Grid.ColumnSpan="5"
+                       InvalidMoveRequested="Tree_InvalidMoveRequested"/>
+        
+            <ImageButton Grid.Row="1"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         Command="{Binding RequestAddCollectionCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Plus}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
 
-            <Label 
-                Text="Welcome to .NET Multi-platform App UI"
-                Grid.Row="1"
-                SemanticProperties.HeadingLevel="Level1"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+        <ImageButton Grid.Row="1"
+                         Grid.Column="1"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         Command="{Binding RequestAddDirectoryCommand}"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                     Padding="4">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource AddFolder}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+        </ImageButton>
 
-            <Label 
-                Text="Current count: 0"
-                Grid.Row="2"
-                FontSize="18"
-                FontAttributes="Bold"
-                x:Name="CounterLabel"
-                HorizontalOptions="Center" />
+        <ImageButton Grid.Row="1"
+                         Grid.Column="2"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                     Command="{Binding RequestRenameDirectoryCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Pencil}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
 
-            <Button 
-                Text="Click me"
-                FontAttributes="Bold"
-                Grid.Row="3"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+            <ImageButton Grid.Row="1"
+                         Grid.Column="3"
+                         BackgroundColor="{StaticResource PrimaryColor}"
+                         Aspect="Center"
+                         IsVisible="{Binding HasSelected, Mode=OneWay}"
+                         Command="{Binding RequestDeleteDirectoryCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Bin}"
+                                     FontFamily="Fluent"
+                                     Color="{StaticResource SecondaryColor}"
+                                 Size="20"
+                                     />
+            </ImageButton.Source>
+            </ImageButton>
 
-            <Image Grid.Row="4"
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                WidthRequest="250"
-                HeightRequest="310"
-                HorizontalOptions="Center" />
 
-        </Grid>
-    </ScrollView>
+    </Grid>
+    
 </ContentPage>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tree="clr-namespace:Pileolinks.Components.Tree"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Pileolinks.Components.Tree.Tree"
+             x:Name="this">
+    <ContentView.Resources>
+        <SolidColorBrush x:Key="NotHoveredBrush">Transparent</SolidColorBrush>
+        <tree:DepthToMarginConverter x:Key="DepthToMarginConverter"></tree:DepthToMarginConverter>
+        <toolkit:BoolToObjectConverter x:Key="BoolToColorBrushConverter"
+                                       TrueObject="{StaticResource PrimaryFaintColor}"
+                                       FalseObject="{StaticResource NotHoveredBrush}" />
+    </ContentView.Resources>
+    <ContentView.Content>
+
+        <ScrollView Grid.ColumnSpan="3">
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ItemsSource, Mode=OneWay}"
+                                     BindingContext="{x:Reference this}"
+                            >
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="tree:ITreeItemViewModel">
+                        <HorizontalStackLayout 
+                                     Margin="{Binding Depth, Converter={StaticResource DepthToMarginConverter}}"
+                                     IsVisible="{Binding IsVisible, Mode=OneWay}"
+                            Background="{Binding IsHovered, Mode=OneWay, Converter={StaticResource BoolToColorBrushConverter}}"
+                                     >
+                            <Image x:Name="ExpandButton"
+                                    IsVisible="{Binding CanExpandAndIsNotExpanded, Mode=OneWay}"
+                                         VerticalOptions="End"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   Aspect="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ExpandCommand}" />
+                                </Image.GestureRecognizers>
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource RightChevron}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"
+                                                     />
+                                </Image.Source>
+                            </Image>
+                            <Image x:Name="CollapseButton"
+                                    IsVisible="{Binding CanExpandAndIsExpanded, Mode=OneWay}"
+                                         VerticalOptions="End"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   Aspect="Center">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding CollapseCommand}" />
+                                </Image.GestureRecognizers>
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource DownChevron}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"/>
+                                </Image.Source>
+                            </Image>
+                            <BoxView WidthRequest="48"
+                                     HeightRequest="48"
+                                     BackgroundColor="Transparent"
+                                     IsVisible="{Binding CannotExpand, Mode=OneWay}"
+                                     VerticalOptions="Center"/>
+                            <Label Text="{Binding Name}"
+                                   Margin="12, 0, 0, 0"
+                                   VerticalTextAlignment="Center"
+                                   VerticalOptions="Fill"
+                                   BackgroundColor="Transparent"
+                                   x:Name="DirectoryNameLabel">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                                    <DragGestureRecognizer DragStarting="DragGestureRecognizer_DragStarting"/>
+                                    <DropGestureRecognizer Drop="DropGestureRecognizer_Drop"
+                                                           DragOver="DropGestureRecognizer_DragOver"
+                                                           DragLeave="DropGestureRecognizer_DragLeave"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Image IsVisible="{Binding IsSelected, Mode=OneWay}"
+                                   Margin="12, 0, 0, 0"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   VerticalOptions="Center"
+                                   Aspect="Center">
+                                <Image.Source>
+                                    <FontImageSource Glyph="{StaticResource Tick}"
+                                                     FontFamily="Fluent"
+                                                     Color="{StaticResource PrimaryColor}"
+                                                     Size="24"/>
+                                </Image.Source>
+                            </Image>
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+                <BindableLayout.EmptyViewTemplate>
+                    <DataTemplate>
+                        <Label HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Text="Nothing to see here, move along." />
+                    </DataTemplate>
+                </BindableLayout.EmptyViewTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentView.Content>
+</ContentView>
