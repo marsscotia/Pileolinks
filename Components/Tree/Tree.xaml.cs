@@ -14,6 +14,8 @@ public partial class Tree : ContentView
     private System.Timers.Timer ExpandTimer;
 
     public event EventHandler<string> InvalidMoveRequested;
+    public event EventHandler<ITreeItem> SelectedItemChanged;
+
     public ObservableCollection<ITreeItemViewModel> ItemsSource { get; private set; } = new();
 
     public ObservableCollection<ITreeItem> Items
@@ -25,7 +27,11 @@ public partial class Tree : ContentView
     public ITreeItem SelectedItem
     {
         get => (ITreeItem)GetValue(SelectedItemProperty);
-        set => SetValue(SelectedItemProperty, value);
+        set
+        {
+            SetValue(SelectedItemProperty, value);
+            SelectedItemChanged?.Invoke(this, ItemsSource.First(i => i.Id == value.Id).TreeItem);
+        }
     }
 
     public Tree()

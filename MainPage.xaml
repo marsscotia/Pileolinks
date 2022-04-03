@@ -1,82 +1,20 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
-             xmlns:tree="clr-namespace:Pileolinks.Components.Tree"
+            xmlns:local="clr-namespace:Pileolinks"
              x:Class="Pileolinks.MainPage"
-             BackgroundColor="{DynamicResource SecondaryColor}"
-             x:DataType="viewmodels:MainPageViewModel">
+             BackgroundColor="{DynamicResource SecondaryColor}">
 
+    <FlyoutPage.Flyout>
+        <local:TreeFlyout x:Name="TreeFlyout"
+                          TreeItemViewModelChanged="Flyout_TreeItemViewModelChanged"/>
+    </FlyoutPage.Flyout>
+
+    <FlyoutPage.Detail>
+        <NavigationPage x:Name="TreeNavigation">
+            <x:Arguments>
+                <local:ItemView />
+            </x:Arguments>
+        </NavigationPage>
+    </FlyoutPage.Detail>
     
-        <Grid RowSpacing="25" 
-              ColumnDefinitions="48, 48, 48, 48, *"
-              RowDefinitions="*, 48"
-              Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
-
-            <tree:Tree Items="{Binding Items, Mode=OneWay}"
-                   SelectedItem="{Binding Selected}"
-                   Grid.ColumnSpan="5"
-                       InvalidMoveRequested="Tree_InvalidMoveRequested"/>
-        
-            <ImageButton Grid.Row="1"
-                         BackgroundColor="{StaticResource PrimaryColor}"
-                         Aspect="Center"
-                         Command="{Binding RequestAddCollectionCommand}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource Plus}"
-                                     FontFamily="Fluent"
-                                     Color="{StaticResource SecondaryColor}"
-                                 Size="20"
-                                     />
-            </ImageButton.Source>
-            </ImageButton>
-
-        <ImageButton Grid.Row="1"
-                         Grid.Column="1"
-                         BackgroundColor="{StaticResource PrimaryColor}"
-                         Aspect="Center"
-                         Command="{Binding RequestAddDirectoryCommand}"
-                         IsVisible="{Binding HasSelected, Mode=OneWay}"
-                     Padding="4">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource AddFolder}"
-                                     FontFamily="Fluent"
-                                     Color="{StaticResource SecondaryColor}"
-                                 Size="20"
-                                     />
-            </ImageButton.Source>
-        </ImageButton>
-
-        <ImageButton Grid.Row="1"
-                         Grid.Column="2"
-                         BackgroundColor="{StaticResource PrimaryColor}"
-                         Aspect="Center"
-                         IsVisible="{Binding HasSelected, Mode=OneWay}"
-                     Command="{Binding RequestRenameDirectoryCommand}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource Pencil}"
-                                     FontFamily="Fluent"
-                                     Color="{StaticResource SecondaryColor}"
-                                 Size="20"
-                                     />
-            </ImageButton.Source>
-            </ImageButton>
-
-            <ImageButton Grid.Row="1"
-                         Grid.Column="3"
-                         BackgroundColor="{StaticResource PrimaryColor}"
-                         Aspect="Center"
-                         IsVisible="{Binding HasSelected, Mode=OneWay}"
-                         Command="{Binding RequestDeleteDirectoryCommand}">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource Bin}"
-                                     FontFamily="Fluent"
-                                     Color="{StaticResource SecondaryColor}"
-                                 Size="20"
-                                     />
-            </ImageButton.Source>
-            </ImageButton>
-
-
-    </Grid>
-    
-</ContentPage>
+</FlyoutPage>

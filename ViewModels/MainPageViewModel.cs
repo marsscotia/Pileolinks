@@ -37,6 +37,8 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        public ITreeItem InitialNavigate => Selected ?? Items.FirstOrDefault();
+
         public string SelectedSummary => Selected == null ?
                     "There is no currently selected directory" :
                     $"{Selected.Name} is the currently selected directory";
