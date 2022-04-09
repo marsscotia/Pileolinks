@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             x:Class="Pileolinks.DirectoryView"
+             Title="DirectoryView"
+             BackgroundColor="White"
+             x:DataType="viewmodels:DirectoryViewModel">
+    <Grid RowDefinitions="*, auto"
+          Padding="8">
+        <CollectionView ItemsSource="{Binding Items}"
+                        ItemTemplate="{StaticResource SummaryDataTemplateSelector}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.EmptyView>
+                <Label Text="This directory doesn't have anything in it yet. Why not add something?" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

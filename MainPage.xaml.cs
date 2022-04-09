@@ -16,12 +16,12 @@ public partial class MainPage : FlyoutPage
     {
         base.OnAppearing();
         await TreeNavigation.PopAsync();
-        await TreeNavigation.PushAsync(new ItemView(TreeFlyout.ViewModel.InitialNavigate));
+        await TreeNavigation.PushAsync(new DirectoryView(TreeFlyout.ViewModel.InitialNavigate));
     }
 
     private async void Flyout_TreeItemViewModelChanged(object sender, Components.Tree.ITreeItem e)
     {
-        await TreeNavigation.Navigation.PushAsync(new ItemView(e));
+        await TreeNavigation.Navigation.PushAsync(new DirectoryView(e));
     }
 }
 

@@ -12,7 +12,7 @@
     <FlyoutPage.Detail>
         <NavigationPage x:Name="TreeNavigation">
             <x:Arguments>
-                <local:ItemView />
+                <local:DirectoryView />
             </x:Arguments>
         </NavigationPage>
     </FlyoutPage.Detail>

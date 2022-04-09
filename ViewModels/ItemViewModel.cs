@@ -9,7 +9,7 @@ namespace Pileolinks.ViewModels
 {
     public class ItemViewModel: BaseViewModel
     {
-        private readonly ITreeItem item;
+        protected readonly ITreeItem item;
 
         public ITreeItem Item => item;
 

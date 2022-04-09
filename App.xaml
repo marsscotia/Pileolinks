@@ -1,5 +1,7 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:Pileolinks.Views"
+             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
              xmlns:local="clr-namespace:Pileolinks"
              x:Class="Pileolinks.App">
     <Application.Resources>
@@ -22,6 +24,52 @@
             <x:String x:Key="Pencil">&#xf3dc;</x:String>
             <x:String x:Key="AddFolder">&#xf41e;</x:String>
             <x:String x:Key="Plus">&#xf107;</x:String>
+            <x:String x:Key="Paste">&#xf2c9;</x:String>
+            <x:String x:Key="Folder">&#xf418;</x:String>
+
+            <DataTemplate x:Key="DirectorySummaryDataTemplate"
+                          x:DataType="viewmodels:DirectoryViewModel">
+                <Grid ColumnDefinitions="48, *, 48"
+                      HeightRequest="48">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:DirectoryViewModel}, AncestorLevel=2}, Path=SelectDirectoryCommand}"
+                                              CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                    <Image Aspect="Center"
+                           InputTransparent="True">
+                        <Image.Source>
+                            <FontImageSource Glyph="{StaticResource Folder}"
+                                             FontFamily="Fluent"
+                                             Color="{StaticResource PrimaryColor}"
+                                             Size="20"/>
+                        </Image.Source>
+                    </Image>
+                    <Label Text="{Binding Name}"
+                           Grid.Column="1"
+                           VerticalTextAlignment="Center"
+                           InputTransparent="True"/>
+                    <Image Grid.Column="2"
+                           Aspect="Center"
+                           InputTransparent="True">
+                        <Image.Source>
+                            <FontImageSource Glyph="{StaticResource RightChevron}"
+                                             FontFamily="Fluent"
+                                             Color="{StaticResource PrimaryColor}"
+                                             Size="20"/>
+                        </Image.Source>
+                    </Image>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="LinkSummaryDataTemplate"
+                          x:DataType="viewmodels:LinkViewModel">
+                <Label Text="{Binding Name}" />
+            </DataTemplate>
+
+            <views:SummaryDataTemplateSelector x:Key="SummaryDataTemplateSelector"
+                                               DirectoryDataTemplate="{StaticResource DirectorySummaryDataTemplate}"
+                                               LinkDataTemplate="{StaticResource LinkSummaryDataTemplate}" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

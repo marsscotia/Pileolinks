@@ -2,7 +2,7 @@
 
 namespace Pileolinks.Models
 {
-    internal class LinkDirectory : ITreeItem
+    public class LinkDirectory : ITreeItem
     {
         private readonly string id;
         private ITreeItem parent;
