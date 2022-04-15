@@ -6,11 +6,10 @@
              x:Class="Pileolinks.Components.Tree.Tree"
              x:Name="this">
     <ContentView.Resources>
-        <SolidColorBrush x:Key="NotHoveredBrush">Transparent</SolidColorBrush>
         <tree:DepthToMarginConverter x:Key="DepthToMarginConverter"></tree:DepthToMarginConverter>
         <toolkit:BoolToObjectConverter x:Key="BoolToColorBrushConverter"
-                                       TrueObject="{StaticResource PrimaryFaintColor}"
-                                       FalseObject="{StaticResource NotHoveredBrush}" />
+                                       TrueObject="{StaticResource LightBrush}"
+                                       FalseObject="{StaticResource TransparentBrush}" />
     </ContentView.Resources>
     <ContentView.Content>
 
@@ -37,7 +36,6 @@
                                 <Image.Source>
                                     <FontImageSource Glyph="{StaticResource RightChevron}"
                                                      FontFamily="Fluent"
-                                                     Color="{StaticResource PrimaryColor}"
                                                      Size="24"
                                                      />
                                 </Image.Source>
@@ -54,13 +52,12 @@
                                 <Image.Source>
                                     <FontImageSource Glyph="{StaticResource DownChevron}"
                                                      FontFamily="Fluent"
-                                                     Color="{StaticResource PrimaryColor}"
                                                      Size="24"/>
                                 </Image.Source>
                             </Image>
                             <BoxView WidthRequest="48"
                                      HeightRequest="48"
-                                     BackgroundColor="Transparent"
+                                     Color="Transparent"
                                      IsVisible="{Binding CannotExpand, Mode=OneWay}"
                                      VerticalOptions="Center"/>
                             <Label Text="{Binding Name}"
@@ -86,7 +83,6 @@
                                 <Image.Source>
                                     <FontImageSource Glyph="{StaticResource Tick}"
                                                      FontFamily="Fluent"
-                                                     Color="{StaticResource PrimaryColor}"
                                                      Size="24"/>
                                 </Image.Source>
                             </Image>

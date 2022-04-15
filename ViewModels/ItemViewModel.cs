@@ -17,8 +17,6 @@ namespace Pileolinks.ViewModels
 
         public bool NoItem => item == null;
 
-        public string Name => item == null ? string.Empty : item.Name;
-        
         public ItemViewModel(ITreeItem item)
         {
             this.item = item;

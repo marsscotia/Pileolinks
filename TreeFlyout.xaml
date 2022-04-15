@@ -5,12 +5,11 @@
              xmlns:tree="clr-namespace:Pileolinks.Components.Tree"
              x:Class="Pileolinks.TreeFlyout"
              Title="Pile o' Links"
-             BackgroundColor="White"
-             x:DataType="viewmodels:MainPageViewModel">
-    <Grid RowSpacing="25"
+             x:DataType="viewmodels:MainPageViewModel"
+             Padding="24, 24, 24, 48">
+    <Grid RowSpacing="24"
           ColumnDefinitions="48, 48, 48, 48, *"
-          RowDefinitions="*, 48"
-          Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
+          RowDefinitions="*, 48">
 
         <tree:Tree Items="{Binding Items, Mode=OneWay}"
                    SelectedItem="{Binding Selected}"
@@ -19,20 +18,17 @@
                    SelectedItemChanged="Tree_SelectedItemChanged"/>
 
         <ImageButton Grid.Row="1"
-                     BackgroundColor="{StaticResource PrimaryColor}"
                      Aspect="Center"
                      Command="{Binding RequestAddCollectionCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Plus}"
                                  FontFamily="Fluent"
-                                 Color="{StaticResource SecondaryColor}"
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
 
         <ImageButton Grid.Row="1"
                      Grid.Column="1"
-                     BackgroundColor="{StaticResource PrimaryColor}"
                      Aspect="Center"
                      Command="{Binding RequestAddDirectoryCommand}"
                      IsVisible="{Binding HasSelected, Mode=OneWay}"
@@ -40,35 +36,30 @@
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource AddFolder}"
                                  FontFamily="Fluent"
-                                 Color="{StaticResource SecondaryColor}"
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
 
         <ImageButton Grid.Row="1"
                      Grid.Column="2"
-                     BackgroundColor="{StaticResource PrimaryColor}"
                      Aspect="Center"
                      IsVisible="{Binding HasSelected, Mode=OneWay}"
                      Command="{Binding RequestRenameDirectoryCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Pencil}"
                                  FontFamily="Fluent"
-                                 Color="{StaticResource SecondaryColor}"
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
 
         <ImageButton Grid.Row="1"
                      Grid.Column="3"
-                     BackgroundColor="{StaticResource PrimaryColor}"
                      Aspect="Center"
                      IsVisible="{Binding HasSelected, Mode=OneWay}"
                      Command="{Binding RequestDeleteDirectoryCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Bin}"
                                  FontFamily="Fluent"
-                                 Color="{StaticResource SecondaryColor}"
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>

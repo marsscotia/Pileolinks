@@ -12,7 +12,13 @@ public partial class DirectoryView : ContentPage
 		InitializeComponent();
 		BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
         ViewModel.DirectorySelected += ViewModel_DirectorySelected;
+        ViewModel.LinkAdded += ViewModel_LinkAdded;
 	}
+
+    private async void ViewModel_LinkAdded(object sender, LinkViewModel e)
+    {
+        await Navigation.PushAsync(new LinkView(e.Link));
+    }
 
     private async void ViewModel_DirectorySelected(object sender, DirectoryViewModel e)
     {
@@ -23,5 +29,11 @@ public partial class DirectoryView : ContentPage
     {
 		InitializeComponent();
 		BindingContext = ViewModel = new DirectoryViewModel(null);
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        ViewModel.Initialise();
     }
 }

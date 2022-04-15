@@ -9,28 +9,60 @@ namespace Pileolinks.Models
 {
     public class Link : ITreeItem
     {
-        public string Id => throw new NotImplementedException();
+        private readonly string id;
+        private string name;
+        private string description;
+        private ITreeItem parent;
+        private string uri;
 
-        public string Name => throw new NotImplementedException();
+        public string Id => id;
+
+        public string Name
+        {
+            get => name ?? (uri?.ToString() ?? string.Empty);
+            set => name = value;
+        }
+
+        public string Description
+        {
+            get => description;
+            set => description = value;
+        }
+
+        public string Uri
+        {
+            get => uri;
+            set => uri = value;
+        }
 
         public TreeItemType Type => TreeItemType.Link;
 
-        public List<ITreeItem> Descendants => throw new NotImplementedException();
+        public List<ITreeItem> Descendants => null;
 
-        public List<ITreeItem> Directories => throw new NotImplementedException();
+        public List<ITreeItem> Directories => null;
 
-        public ITreeItem Ancestor => throw new NotImplementedException();
+        public ITreeItem Ancestor => parent;
 
-        public bool HasAncestor => throw new NotImplementedException();
+        public bool HasAncestor => parent != null;
 
-        public bool HasDescendants => throw new NotImplementedException();
+        public bool HasDescendants => false;
 
-        public bool HasDirectories => throw new NotImplementedException();
+        public bool HasDirectories => false;
 
         public event EventHandler<ITreeItem> DescendantAdded;
         public event EventHandler Deleted;
         public event EventHandler<ITreeItem> Moved;
         public event EventHandler NameChanged;
+
+        public Link(string id, ITreeItem parent, string uri = null, string name = null)
+        {
+            this.id = id;
+            this.parent = parent;
+            this.uri = uri;
+            this.name = name;
+        }
+
+        
 
         public bool AddDirectory(string name)
         {

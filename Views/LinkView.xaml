@@ -5,20 +5,38 @@
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
              x:Class="Pileolinks.LinkView"
              Title="{Binding Name}"
-             BackgroundColor="White"
-             x:DataType="viewmodels:ItemViewModel">
+             x:DataType="viewmodels:LinkViewModel">
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
-    <StackLayout>
-        <Label Text="{Binding Name}"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center"
-               IsVisible="{Binding NoItem, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}"/>
-        <Label Text="Select a directory in the flyout to see the details here."
-               VerticalOptions="Center"
-               HorizontalOptions="Center"
-               IsVisible="{Binding NoItem, Mode=OneWay}" />
-    </StackLayout>
+    <Grid RowDefinitions="48, 48, 48, 48, 48, 150"
+          ColumnDefinitions="*, 48"
+          Padding="8"
+          ColumnSpacing="8">
+        <Label Text="Name:"
+               VerticalTextAlignment="End" />
+        <Entry Text="{Binding Name, Mode=TwoWay}"
+               Grid.Row="1"/>
+        <Label Text="Uri:"
+               Grid.Row="2"
+               VerticalTextAlignment="End"/>
+        <Entry Text="{Binding LinkUri, Mode=TwoWay, UpdateSourceEventName=Completed}"
+               Grid.Row="3" />
+        <ImageButton Grid.Row="3"
+                     Grid.Column="1"
+                     Aspect="Center">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Paste}"
+                                 FontFamily="Fluent"
+                                 Size="20" />
+            </ImageButton.Source>
+        </ImageButton>
+        <Label Text="Description:"
+               Grid.Row="4"
+               VerticalTextAlignment="End"
+               />
+        <Editor Text="{Binding Description, Mode=TwoWay}"
+                Grid.Row="5" />
+    </Grid>
 </ContentPage>

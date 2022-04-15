@@ -69,6 +69,13 @@ namespace Pileolinks.Models
             return result;
         }
 
+        public Link AddLink()
+        {
+            Link link = new(Guid.NewGuid().ToString(), this, name: "New Link");
+            Descendants.Add(link);
+            return link;
+        }
+
         public bool MoveToDirectory(ITreeItem directory)
         {
             if (directory.Type != TreeItemType.Directory)
