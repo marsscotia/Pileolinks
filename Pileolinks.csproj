@@ -27,6 +27,7 @@
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+		<Platforms>AnyCPU;ARM64;x64;x86</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,28 +47,64 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<!-- Required - WinUI does not yet have buildTransitive for everything -->
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
+	  <Page Remove="PileNavigation.xaml" />
+	  <Page Remove="Resources\Styles.xaml" />
+	  <Page Remove="Views\DirectoryView.xaml" />
+	  <Page Remove="Views\LinkView.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Folder Include="Services\Interfaces\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-pre8" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0-pre9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="TreeFlyout.xaml.cs">
+	    <DependentUpon>TreeFlyout.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\LinkView.xaml.cs">
+	    <DependentUpon>LinkView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="PileNavigation.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="TreeFlyout.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\DirectoryView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LinkView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
 		<OutputType>WinExe</OutputType>
 		<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <CustomAdditionalCompileInputs Remove="Resources\Styles.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Remove="Resources\Styles.xaml" />
+	</ItemGroup>
 	
 </Project>

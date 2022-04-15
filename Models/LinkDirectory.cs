@@ -2,7 +2,7 @@
 
 namespace Pileolinks.Models
 {
-    internal class LinkDirectory : ITreeItem
+    public class LinkDirectory : ITreeItem
     {
         private readonly string id;
         private ITreeItem parent;
@@ -67,6 +67,13 @@ namespace Pileolinks.Models
             }
 
             return result;
+        }
+
+        public Link AddLink()
+        {
+            Link link = new(Guid.NewGuid().ToString(), this, name: "New Link");
+            Descendants.Add(link);
+            return link;
         }
 
         public bool MoveToDirectory(ITreeItem directory)

@@ -1,19 +1,14 @@
 ﻿<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:Pileolinks.Views"
+             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
              xmlns:local="clr-namespace:Pileolinks"
              x:Class="Pileolinks.App">
     <Application.Resources>
-        <ResourceDictionary>
-
-            <Color x:Key="PrimaryColor">#512bdf</Color>
-            <Color x:Key="PrimaryFaintColor">#b58fff</Color>
-            <Color x:Key="SecondaryColor">White</Color>
-
-            <Style TargetType="Label">
-                <Setter Property="TextColor"
-                        Value="{StaticResource PrimaryColor}" />
-            </Style>
-
+        
+            
+            <ResourceDictionary Source="Resources/Styles.xaml" />
+            
             <x:String x:Key="ThreeDotMenu">&#xf558;</x:String>
             <x:String x:Key="RightChevron">&#xf2ae;</x:String>
             <x:String x:Key="DownChevron">&#xf2a1;</x:String>
@@ -22,6 +17,70 @@
             <x:String x:Key="Pencil">&#xf3dc;</x:String>
             <x:String x:Key="AddFolder">&#xf41e;</x:String>
             <x:String x:Key="Plus">&#xf107;</x:String>
-        </ResourceDictionary>
+            <x:String x:Key="Paste">&#xf2c9;</x:String>
+            <x:String x:Key="Folder">&#xf418;</x:String>
+            <x:String x:Key="Link">&#xf4e3;</x:String>
+            <x:String x:Key="Search">&#xf68f;</x:String>
+            <x:String x:Key="EditLink">&#xf4e8;</x:String>
+
+            <DataTemplate x:Key="DirectorySummaryDataTemplate"
+                          x:DataType="viewmodels:DirectoryViewModel">
+                <Grid ColumnDefinitions="48, *"
+                      HeightRequest="48"
+                      ColumnSpacing="12">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:DirectoryViewModel}, AncestorLevel=2}, Path=SelectDirectoryCommand}"
+                                              CommandParameter="{Binding .}" />
+                    </Grid.GestureRecognizers>
+                    <Image Aspect="Center"
+                           InputTransparent="True">
+                        <Image.Source>
+                            <FontImageSource Glyph="{StaticResource Folder}"
+                                             FontFamily="Fluent"
+                                             Size="20"/>
+                        </Image.Source>
+                    </Image>
+                <Label Text="{Binding Name}"
+                       Grid.Column="1"
+                       VerticalTextAlignment="Center"
+                       InputTransparent="True" />
+            </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="LinkSummaryDataTemplate"
+                          x:DataType="viewmodels:LinkViewModel">
+                <Grid ColumnDefinitions="48, *, 48"
+                      RowDefinitions="48, auto">
+                    <Image Aspect="Center"
+                           InputTransparent="True">
+                        <Image.Source>
+                            <FontImageSource Glyph="{StaticResource Link}"
+                                             FontFamily="Fluent"
+                                             Size="20" />
+                        </Image.Source>
+                    </Image>
+                    <Label Grid.Column="1"
+                           Text="{Binding Name}"
+                           VerticalTextAlignment="Center"
+                           InputTransparent="True" />
+                    <ImageButton Grid.Column="2"
+                                 Aspect="Center">
+                        <ImageButton.Source>
+                            <FontImageSource Glyph="{StaticResource EditLink}"
+                                             FontFamily="Fluent"
+                                             Size="20" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                    <Label Grid.Row="1"
+                           Grid.Column="1"
+                           LineBreakMode="TailTruncation"
+                           Text="{Binding LinkUri}" />
+                </Grid>
+            </DataTemplate>
+
+            <views:SummaryDataTemplateSelector x:Key="SummaryDataTemplateSelector"
+                                               DirectoryDataTemplate="{StaticResource DirectorySummaryDataTemplate}"
+                                               LinkDataTemplate="{StaticResource LinkSummaryDataTemplate}" />
+
     </Application.Resources>
 </Application>

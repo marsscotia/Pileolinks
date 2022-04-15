@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             x:Class="Pileolinks.DirectoryView"
+             Title="{Binding Name}"
+             x:DataType="viewmodels:DirectoryViewModel">
+    <Grid RowDefinitions="48, *, 48"
+          ColumnDefinitions="48, 48, *, 48"
+          Padding="8">
+        <ImageButton Grid.Column="3"
+                     Aspect="Center">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Search}"
+                                 FontFamily="Fluent"
+                                 Size="20"/>
+            </ImageButton.Source>
+        </ImageButton>
+        <CollectionView ItemsSource="{Binding Items}"
+                        ItemTemplate="{StaticResource SummaryDataTemplateSelector}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="4">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.EmptyView>
+                <Label Text="This directory doesn't have anything in it yet. Why not add something?" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+        <ImageButton Grid.Row="2"
+                     Aspect="Center"
+                     Command="{Binding AddLinkCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Plus}"
+                                 FontFamily="Fluent"
+                                 Size="20" />
+            </ImageButton.Source>
+        </ImageButton>
+        <ImageButton Grid.Row="2"
+                     Grid.Column="1"
+                     Aspect="Center">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource AddFolder}"
+                                 FontFamily="Fluent"
+                                 Size="20" />
+            </ImageButton.Source>
+        </ImageButton>
+    </Grid>
+</ContentPage>
