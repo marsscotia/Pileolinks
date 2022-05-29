@@ -1,4 +1,9 @@
 ﻿using CommunityToolkit.Maui;
+using Pileolinks.Services;
+using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels;
+
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
 namespace Pileolinks;
 
@@ -7,6 +12,7 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
