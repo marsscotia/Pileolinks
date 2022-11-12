@@ -1,7 +1,4 @@
 ﻿using CommunityToolkit.Maui;
-using Pileolinks.Services;
-using Pileolinks.Services.Interfaces;
-using Pileolinks.ViewModels;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
