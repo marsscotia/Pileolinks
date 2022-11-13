@@ -25,7 +25,10 @@
                                    ItemSpacing="12" />
             </CollectionView.ItemsLayout>
             <CollectionView.EmptyView>
-                <Label Text="This directory doesn't have anything in it yet. Why not add something?" />
+                <Label Text="This directory doesn't have anything in it yet. Why not add something?"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
             </CollectionView.EmptyView>
         </CollectionView>
         <ImageButton Grid.Row="2"
@@ -39,7 +42,8 @@
         </ImageButton>
         <ImageButton Grid.Row="2"
                      Grid.Column="1"
-                     Aspect="Center">
+                     Aspect="Center"
+                     Clicked="ImageButton_Clicked">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource AddFolder}"
                                  FontFamily="Fluent"

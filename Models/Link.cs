@@ -76,7 +76,23 @@ namespace Pileolinks.Models
 
         public bool MoveToDirectory(ITreeItem directory)
         {
-            throw new NotImplementedException();
+            if (directory.Type != TreeItemType.Directory)
+            {
+                throw new ArgumentException("The specified tree item must be of type directory.");
+            }
+
+            bool result;
+
+            if (HasAncestor)
+            {
+                Ancestor.Descendants.Remove(this);
+            }
+            directory.Descendants.Add(this);
+            parent = directory;
+            Moved?.Invoke(this, directory);
+            result = true;
+
+            return result;
         }
 
         public void Rename(string name)

@@ -13,7 +13,13 @@ public partial class DirectoryView : ContentPage
 		BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
         ViewModel.DirectorySelected += ViewModel_DirectorySelected;
         ViewModel.LinkAdded += ViewModel_LinkAdded;
+        ViewModel.AlertRequested += ViewModel_AlertRequested;
 	}
+
+    private async void ViewModel_AlertRequested(object sender, AlertEventArgs e)
+    {
+        await DisplayAlert(e.Title, e.Message, e.ConfirmButton);
+    }
 
     private async void ViewModel_LinkAdded(object sender, LinkViewModel e)
     {
@@ -35,5 +41,14 @@ public partial class DirectoryView : ContentPage
     {
         base.OnAppearing();
         ViewModel.Initialise();
+    }
+
+    private async void ImageButton_Clicked(object sender, EventArgs e)
+    {
+        string name = await DisplayPromptAsync("New Directory", "What would you like to call the new directory?");
+        if (name is not null)
+        {
+            ViewModel.AddDirectoryCommand.Execute(name);
+        }
     }
 }

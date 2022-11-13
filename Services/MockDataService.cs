@@ -36,5 +36,15 @@ namespace Pileolinks.Services
 
             return treeItems;
         }
+
+        public bool SaveCollection(LinkDirectory linkDirectory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveCollections(List<LinkDirectory> linkDirectories)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
