@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.Services
 {
-    internal class DataConverter : IDataConverter
+    public class DataConverter : IDataConverter
     {
-        public List<TreeItemDTO> GetTreeItemDTOs(List<ITreeItem> treeItems)
+        public List<ITreeItemDTO> GetTreeItemDTOs(List<ITreeItem> treeItems)
         {
-            List<TreeItemDTO> treeDTOs = new();
+            List<ITreeItemDTO> treeDTOs = new();
 
             Stack<ITreeItem> stack = new();
             foreach (ITreeItem item in treeItems)
@@ -57,7 +57,7 @@ namespace Pileolinks.Services
             return treeDTOs;
         }
 
-        public List<ITreeItem> GetTreeItems(List<TreeItemDTO> treeItems)
+        public List<ITreeItem> GetTreeItems(List<ITreeItemDTO> treeItems)
         {
             List<ITreeItem> results = new();
 

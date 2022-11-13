@@ -13,7 +13,7 @@ namespace Pileolinks.ViewModels
         private Command requestDeleteDirectoryCommand, requestAddDirectoryCommand, requestAddCollectionCommand, requestRenameDirectoryCommand;
         private Command<ITreeItem> deleteDirectoryCommand;
         private Command<string> addDirectoryCommand, addCollectionCommand, renameDirectoryCommand;
-        private IDataService dataService;
+        private readonly IDataService dataService;
 
         public event EventHandler<ITreeItem> DeleteRequested;
         public event EventHandler AddDirectoryRequested;
@@ -55,9 +55,9 @@ namespace Pileolinks.ViewModels
         public Command RequestRenameDirectoryCommand => requestRenameDirectoryCommand ??= new Command(RequestRenameDirectory);
         public Command<string> RenameDirectoryCommand => renameDirectoryCommand ??= new Command<string>(RenameDirectory);
 
-        public MainPageViewModel()
+        public MainPageViewModel(IDataService dataService)
         {
-            this.dataService = new LocalStorageDataService();
+            this.dataService = dataService;
             ObservableCollection<ITreeItem> items = new();
             foreach (ITreeItem item in dataService.GetTopLevelTreeItems())
             {

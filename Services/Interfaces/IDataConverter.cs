@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.Services.Interfaces
 {
-    internal interface IDataConverter
+    public interface IDataConverter
     {
-        List<TreeItemDTO> GetTreeItemDTOs(List<ITreeItem> treeItems);
-        List<ITreeItem> GetTreeItems(List<TreeItemDTO> treeItems);
+        List<ITreeItemDTO> GetTreeItemDTOs(List<ITreeItem> treeItems);
+        List<ITreeItem> GetTreeItems(List<ITreeItemDTO> treeItems);
         
     }
 }

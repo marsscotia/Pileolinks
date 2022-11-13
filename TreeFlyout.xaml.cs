@@ -8,10 +8,10 @@ public partial class TreeFlyout : ContentPage
     public MainPageViewModel ViewModel { get; private set; }
     public event EventHandler<ITreeItem> TreeItemViewModelChanged;
 
-	public TreeFlyout()
+	public TreeFlyout(MainPageViewModel mainPageViewModel)
 	{
 		InitializeComponent();
-        BindingContext = ViewModel = new MainPageViewModel();
+        BindingContext = ViewModel = mainPageViewModel;
         ViewModel.DeleteRequested += ViewModel_DeleteRequested;
         ViewModel.AlertRequested += ViewModel_AlertRequested;
         ViewModel.AddCollectionRequested += ViewModel_AddCollectionRequested;

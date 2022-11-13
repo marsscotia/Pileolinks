@@ -15,21 +15,35 @@ namespace Pileolinks.Services
     public class LocalStorageDataService : IDataService
     {
         private static readonly string FilePrefix = "Pileolinks-";
+        private readonly IDataConverter _converter;
+
+        public LocalStorageDataService(IDataConverter converter)
+        {
+            _converter = converter;
+        }
+
         public List<ITreeItem> GetTopLevelTreeItems()
         {
             List<ITreeItem> results = new();
-
-            var files = Directory.EnumerateFiles(FileSystem.AppDataDirectory);
+            List<ITreeItemDTO> treeItems = new();
+            var files = Directory.EnumerateFiles(FileSystem.Current.AppDataDirectory);
             foreach (var file in files)
             {
                 if (Path.GetFileNameWithoutExtension(file).StartsWith(FilePrefix))
                 {
                     string jsonText = File.ReadAllText(file);
-                    LinkDirectory directory = JsonSerializer.Deserialize<LinkDirectory>(jsonText);
-                    results.Add(directory);
+                    try
+                    {
+                        List<ITreeItemDTO> current = JsonSerializer.Deserialize<List<ITreeItemDTO>>(jsonText);
+                        treeItems.AddRange(current);
+                    }
+                    catch (Exception)
+                    {
+                        File.Delete(file);
+                    }
                 }
             }
-
+            results.AddRange(_converter.GetTreeItems(treeItems));
             return results;
         }
 
@@ -37,14 +51,16 @@ namespace Pileolinks.Services
         {
             bool result;
             string fileName = $"{FilePrefix}{linkDirectory.Id}.json";
+            List<ITreeItemDTO> treeItemDTOs = _converter.GetTreeItemDTOs(new List<ITreeItem> { linkDirectory });
             try
             {
-                File.WriteAllText(Path.Combine(FileSystem.AppDataDirectory, fileName), JsonSerializer.Serialize(linkDirectory));
+                File.WriteAllText(Path.Combine(FileSystem.Current.AppDataDirectory, fileName), JsonSerializer.Serialize(treeItemDTOs));
                 result = true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 result = false;
+                Debug.WriteLine(e.Message);
             }
             return result;
         }

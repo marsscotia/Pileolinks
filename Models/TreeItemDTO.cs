@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Pileolinks.Models
 {
-    internal interface TreeItemDTO
+    [JsonDerivedType(typeof(DirectoryDTO), typeDiscriminator:"directory")]
+    [JsonDerivedType(typeof(LinkDTO), typeDiscriminator:"link")]
+    public interface ITreeItemDTO
     {
         string ItemType { get; }
         string Id { get; }
     }
     
-    internal record DirectoryDTO(
+    public record DirectoryDTO(
         string Id,
         string Name,
         string AncestorId,
         List<string> DescendantIds,
         string ItemType
-        ) : TreeItemDTO;
+        ) : ITreeItemDTO;
 
-    internal record LinkDTO(
+    public record LinkDTO(
         string Id, 
         string Name, 
         string Description, 
         string Uri, 
         string AncestorId, 
         string ItemType
-        ) : TreeItemDTO;
+        ) : ITreeItemDTO;
 }

@@ -4,10 +4,15 @@ namespace Pileolinks;
 
 public partial class MainPage : FlyoutPage
 {
-	public MainPage()
+	public TreeFlyout TreeFlyout { get; private set; }
+    
+    public MainPage(TreeFlyout treeFlyout)
 	{
 		InitializeComponent();
 		BindingContext = this;
+        Flyout = TreeFlyout = treeFlyout;
+        treeFlyout.TreeItemViewModelChanged += Flyout_TreeItemViewModelChanged;
+        treeFlyout.Loaded += TreeFlyout_Loaded;
     }
 
     protected override async void OnAppearing()
