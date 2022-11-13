@@ -25,4 +25,10 @@ public partial class App : Application
     {
         (MainPage as MainPage).TreeFlyout.ViewModel.SaveState();
     }
+
+    protected override void OnSleep()
+    {
+        base.OnSleep();
+        (MainPage as MainPage).TreeFlyout.ViewModel.SaveState();
+    }
 }

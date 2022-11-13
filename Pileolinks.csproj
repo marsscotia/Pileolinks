@@ -60,10 +60,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Services\Interfaces\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
 	</ItemGroup>
 
