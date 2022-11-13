@@ -1,6 +1,7 @@
 ﻿using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services;
+using Pileolinks.Services.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace Pileolinks.ViewModels
@@ -12,7 +13,7 @@ namespace Pileolinks.ViewModels
         private Command requestDeleteDirectoryCommand, requestAddDirectoryCommand, requestAddCollectionCommand, requestRenameDirectoryCommand;
         private Command<ITreeItem> deleteDirectoryCommand;
         private Command<string> addDirectoryCommand, addCollectionCommand, renameDirectoryCommand;
-        
+        private readonly IDataService dataService;
 
         public event EventHandler<ITreeItem> DeleteRequested;
         public event EventHandler AddDirectoryRequested;
@@ -54,15 +55,17 @@ namespace Pileolinks.ViewModels
         public Command RequestRenameDirectoryCommand => requestRenameDirectoryCommand ??= new Command(RequestRenameDirectory);
         public Command<string> RenameDirectoryCommand => renameDirectoryCommand ??= new Command<string>(RenameDirectory);
 
-        public MainPageViewModel()
+        public MainPageViewModel(IDataService dataService)
         {
+            this.dataService = dataService;
             ObservableCollection<ITreeItem> items = new();
-            foreach (ITreeItem item in new MockDataService().GetTopLevelTreeItems())
+            foreach (ITreeItem item in dataService.GetTopLevelTreeItems())
             {
                 items.Add(item);
             }
             Items = items;
         }
+
 
         private void AddDirectory(string name)
         {
@@ -114,6 +117,10 @@ namespace Pileolinks.ViewModels
                     else
                     {
                         Items.Insert(Items.IndexOf(found), linkDirectory);
+                    }
+                    if (Items.Count == 1)
+                    {
+                        Selected = linkDirectory;
                     }
                 }
                 else
@@ -214,6 +221,13 @@ namespace Pileolinks.ViewModels
                 }
             }
         }
+
+        public void SaveState()
+        {
+            dataService.SaveCollections(Items.Select(i => (LinkDirectory)i).ToList());
+        }
+
+        
 
     }
 }
