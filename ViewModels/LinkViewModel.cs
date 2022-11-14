@@ -1,4 +1,5 @@
-﻿using Pileolinks.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using Pileolinks.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.ViewModels
 {
-    public class LinkViewModel : ItemViewModel
+    public partial class LinkViewModel : ItemViewModel
     {
         protected readonly Link link;
+
+        public event EventHandler EditLinkRequested;
+        public event EventHandler LaunchUrlRequested;
 
         public Link Link => link;
         public string LinkUri
@@ -54,6 +58,18 @@ namespace Pileolinks.ViewModels
         public LinkViewModel(Link link) : base(link)
         {
             this.link = link;
+        }
+
+        [RelayCommand]
+        private void EditLink()
+        {
+            EditLinkRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        [RelayCommand]
+        private void LaunchUrl()
+        {
+            LaunchUrlRequested?.Invoke(this, EventArgs.Empty);
         }
 
     }

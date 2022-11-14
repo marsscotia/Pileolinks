@@ -2,7 +2,7 @@
 
 public partial class App : Application
 {
-	public App(IServiceProvider serviceProvider)
+	
 	/// <summary>
     /// Note to future self: We don't seem to be able to 
     /// inject the MainPage type into the constructor here,
