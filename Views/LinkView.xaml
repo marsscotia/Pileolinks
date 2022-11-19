@@ -10,33 +10,73 @@
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="48, 48, 48, 48, 48, 150"
-          ColumnDefinitions="*, 48"
-          Padding="8"
-          ColumnSpacing="8">
-        <Label Text="Name:"
-               VerticalTextAlignment="End" />
-        <Entry Text="{Binding Name, Mode=TwoWay}"
-               Grid.Row="1"/>
-        <Label Text="Uri:"
-               Grid.Row="2"
-               VerticalTextAlignment="End"/>
-        <Entry Text="{Binding LinkUri, Mode=TwoWay, UpdateSourceEventName=Completed}"
-               Grid.Row="3" />
-        <ImageButton Grid.Row="3"
-                     Grid.Column="1"
-                     Aspect="Center">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource Paste}"
-                                 FontFamily="Fluent"
-                                 Size="20" />
-            </ImageButton.Source>
-        </ImageButton>
-        <Label Text="Description:"
-               Grid.Row="4"
-               VerticalTextAlignment="End"
-               />
-        <Editor Text="{Binding Description, Mode=TwoWay}"
-                Grid.Row="5" />
-    </Grid>
+    <ScrollView>
+        <Grid RowDefinitions="48, 48, 48, 48, 48, 150, 48, 48, auto"
+              ColumnDefinitions="*, 48"
+              Padding="8"
+              ColumnSpacing="8"
+              RowSpacing="4">
+            <Label Text="Name:"
+                   VerticalTextAlignment="End" />
+            <Entry Text="{Binding Name, Mode=TwoWay}"
+                   Grid.Row="1" />
+            <Label Text="Uri:"
+                   Grid.Row="2"
+                   VerticalTextAlignment="End" />
+            <Entry Text="{Binding LinkUri, Mode=TwoWay, UpdateSourceEventName=Completed}"
+                   Grid.Row="3" />
+            <ImageButton Grid.Row="3"
+                         Grid.Column="1"
+                         Aspect="Center">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{StaticResource Paste}"
+                                     FontFamily="Fluent"
+                                     Size="20" />
+                </ImageButton.Source>
+            </ImageButton>
+            <Label Text="Description:"
+                   Grid.Row="4"
+                   VerticalTextAlignment="End" />
+            <Editor Text="{Binding Description, Mode=TwoWay}"
+                    Grid.Row="5" />
+            <Label Text="Tags:"
+                   VerticalTextAlignment="End"
+                   Grid.Row="6" />
+            <Entry Grid.Row="7"
+                   Text="{Binding NewTagContent,Mode=TwoWay}"
+                   x:Name="NewTagContentEntry"/>
+            <ImageButton Grid.Row="7"
+                         Grid.Column="1"
+                         Aspect="Center"
+                         Command="{Binding AddTagCommand}"
+                         CommandParameter="{Binding Source={x:Reference NewTagContentEntry},Path=Text}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{StaticResource Plus}"
+                                     FontFamily="Fluent"
+                                     Size="20" />
+                </ImageButton.Source>
+            </ImageButton>
+            <FlexLayout Direction="Row"
+                        AlignContent="Start"
+                        Wrap="Wrap"
+                        AlignItems="Start"
+                        Grid.Row="8"
+                        BindableLayout.ItemsSource="{Binding Tags}"
+                        Grid.ColumnSpan="2">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="RoundRectangle 8, 8, 8, 8"
+                                BackgroundColor="{DynamicResource LightGray}"
+                                StrokeThickness="0"
+                                Padding="8, 4"
+                                Margin="0, 0, 4, 0"
+                                >
+                            <Label Text="{Binding .}"
+                                   TextColor="{DynamicResource DarkGray}"/>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+    </ScrollView>
 </ContentPage>

@@ -1,7 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ namespace Pileolinks.ViewModels
     public partial class LinkViewModel : ItemViewModel
     {
         protected readonly Link link;
+        private string newTagContent;
 
         public event EventHandler EditLinkRequested;
         public event EventHandler LaunchUrlRequested;
@@ -55,9 +58,22 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        public string NewTagContent
+        {
+            get => newTagContent;
+            set => SetProperty(ref newTagContent, value);
+        }
+
+
+        public ObservableCollection<string> Tags { get; private set; } = new();
+
         public LinkViewModel(Link link) : base(link)
         {
             this.link = link;
+            foreach (var tag in link.Tags)
+            {
+                Tags.Add(tag);
+            }
         }
 
         [RelayCommand]
@@ -70,6 +86,27 @@ namespace Pileolinks.ViewModels
         private void LaunchUrl()
         {
             LaunchUrlRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        [RelayCommand]
+        private void AddTag(string tag)
+        {
+            bool success = link.Tags.Add(tag);
+            if (success) 
+            {
+                Tags.Add(tag);
+            }
+            NewTagContent = string.Empty;
+        }
+
+        [RelayCommand]
+        private void RemoveTag(string tag) 
+        {
+            bool success = link.Tags.Remove(tag);
+            if (success) 
+            {
+                Tags.Remove(tag);
+            }
         }
 
     }

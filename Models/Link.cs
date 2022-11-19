@@ -35,6 +35,8 @@ namespace Pileolinks.Models
             set => uri = value;
         }
 
+        public HashSet<string> Tags { get; private set; }
+
         public TreeItemType Type => TreeItemType.Link;
 
         public List<ITreeItem> Descendants => null;
@@ -54,12 +56,13 @@ namespace Pileolinks.Models
         public event EventHandler<ITreeItem> Moved;
         public event EventHandler NameChanged;
 
-        public Link(string id, ITreeItem parent, string uri = null, string name = null)
+        public Link(string id, ITreeItem parent, string uri = null, string name = null, HashSet<string> tags = default)
         {
             this.id = id;
             this.parent = parent;
             this.uri = uri;
             this.name = name;
+            Tags = tags ?? new();
         }
 
         
@@ -99,5 +102,6 @@ namespace Pileolinks.Models
         {
             throw new NotImplementedException();
         }
+
     }
 }

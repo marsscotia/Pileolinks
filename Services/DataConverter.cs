@@ -3,6 +3,7 @@ using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +48,9 @@ namespace Pileolinks.Services
                             ItemType: current.Type.ToString(),
                             AncestorId: current.Ancestor.Id,
                             Description : ((Link)current).Description,
-                            Uri : ((Link)current).Uri));
+                            Uri : ((Link)current).Uri,
+                            Tags : ((Link)current).Tags
+                            ));
                         break;
                     default:
                         break;
@@ -77,7 +80,7 @@ namespace Pileolinks.Services
                             break;
                         case TreeItemType.Link:
                             LinkDTO linkDTO = (LinkDTO)item;
-                            items.Add(new Link(linkDTO.Id, null, linkDTO.Uri, linkDTO.Name)
+                            items.Add(new Link(linkDTO.Id, null, linkDTO.Uri, linkDTO.Name, linkDTO.Tags)
                             {
                                 Description = linkDTO.Description
                             });

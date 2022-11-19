@@ -124,6 +124,8 @@
         <views:SummaryDataTemplateSelector x:Key="SummaryDataTemplateSelector"
                                            DirectoryDataTemplate="{StaticResource DirectorySummaryDataTemplate}"
                                            LinkDataTemplate="{StaticResource LinkSummaryDataTemplate}" />
+        
+        
 
     </Application.Resources>
 </Application>
