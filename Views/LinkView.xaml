@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:components="clr-namespace:Pileolinks.Components"
              x:Class="Pileolinks.LinkView"
              Title="{Binding Name}"
              x:DataType="viewmodels:LinkViewModel">
@@ -65,15 +66,19 @@
                         Grid.ColumnSpan="2">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <Border StrokeShape="RoundRectangle 8, 8, 8, 8"
-                                BackgroundColor="{DynamicResource LightGray}"
-                                StrokeThickness="0"
-                                Padding="8, 4"
-                                Margin="0, 0, 4, 0"
-                                >
-                            <Label Text="{Binding .}"
-                                   TextColor="{DynamicResource DarkGray}"/>
-                        </Border>
+                        <components:Chip ChipText="{Binding .}"
+                                         ChipForegroundColor="{StaticResource Black}"
+                                         ChipBackgroundColor="{StaticResource LightGray}"
+                                         ChipCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:LinkViewModel}},Path=RemoveTagCommand}"
+                                         IsIconVisible="True">
+                            <components:Chip.ChipIcon>
+                                <FontImageSource Glyph="{StaticResource Cross}"
+                                                 FontFamily="Fluent"
+                                                 Color="{StaticResource Black}"
+                                                 Size="20">
+                                </FontImageSource>
+                            </components:Chip.ChipIcon>
+                        </components:Chip>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

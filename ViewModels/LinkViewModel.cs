@@ -70,7 +70,7 @@ namespace Pileolinks.ViewModels
         public LinkViewModel(Link link) : base(link)
         {
             this.link = link;
-            foreach (var tag in link.Tags)
+            foreach (var tag in link.Tags.OrderBy(t => t))
             {
                 Tags.Add(tag);
             }

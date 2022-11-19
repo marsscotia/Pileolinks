@@ -36,7 +36,7 @@ public partial class App : Application
 
     protected override void OnSleep()
     {
-        base.OnSleep();
         (MainPage as MainPage).TreeFlyout.ViewModel.SaveState();
+        base.OnSleep();
     }
 }
