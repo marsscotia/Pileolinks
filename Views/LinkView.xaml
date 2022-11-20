@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:components="clr-namespace:Pileolinks.Components"
              x:Class="Pileolinks.LinkView"
              Title="{Binding Name}"
              x:DataType="viewmodels:LinkViewModel">
@@ -10,33 +11,77 @@
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="48, 48, 48, 48, 48, 150"
-          ColumnDefinitions="*, 48"
-          Padding="8"
-          ColumnSpacing="8">
-        <Label Text="Name:"
-               VerticalTextAlignment="End" />
-        <Entry Text="{Binding Name, Mode=TwoWay}"
-               Grid.Row="1"/>
-        <Label Text="Uri:"
-               Grid.Row="2"
-               VerticalTextAlignment="End"/>
-        <Entry Text="{Binding LinkUri, Mode=TwoWay, UpdateSourceEventName=Completed}"
-               Grid.Row="3" />
-        <ImageButton Grid.Row="3"
-                     Grid.Column="1"
-                     Aspect="Center">
-            <ImageButton.Source>
-                <FontImageSource Glyph="{StaticResource Paste}"
-                                 FontFamily="Fluent"
-                                 Size="20" />
-            </ImageButton.Source>
-        </ImageButton>
-        <Label Text="Description:"
-               Grid.Row="4"
-               VerticalTextAlignment="End"
-               />
-        <Editor Text="{Binding Description, Mode=TwoWay}"
-                Grid.Row="5" />
-    </Grid>
+    <ScrollView>
+        <Grid RowDefinitions="48, 48, 48, 48, 48, 150, 48, 48, auto"
+              ColumnDefinitions="*, 48"
+              Padding="8"
+              ColumnSpacing="8"
+              RowSpacing="4">
+            <Label Text="Name:"
+                   VerticalTextAlignment="End" />
+            <Entry Text="{Binding Name, Mode=TwoWay}"
+                   Grid.Row="1" />
+            <Label Text="Uri:"
+                   Grid.Row="2"
+                   VerticalTextAlignment="End" />
+            <Entry Text="{Binding LinkUri, Mode=TwoWay, UpdateSourceEventName=Completed}"
+                   Grid.Row="3" />
+            <ImageButton Grid.Row="3"
+                         Grid.Column="1"
+                         Aspect="Center">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{StaticResource Paste}"
+                                     FontFamily="Fluent"
+                                     Size="20" />
+                </ImageButton.Source>
+            </ImageButton>
+            <Label Text="Description:"
+                   Grid.Row="4"
+                   VerticalTextAlignment="End" />
+            <Editor Text="{Binding Description, Mode=TwoWay}"
+                    Grid.Row="5" />
+            <Label Text="Tags:"
+                   VerticalTextAlignment="End"
+                   Grid.Row="6" />
+            <Entry Grid.Row="7"
+                   Text="{Binding NewTagContent,Mode=TwoWay}"
+                   x:Name="NewTagContentEntry"/>
+            <ImageButton Grid.Row="7"
+                         Grid.Column="1"
+                         Aspect="Center"
+                         Command="{Binding AddTagCommand}"
+                         CommandParameter="{Binding Source={x:Reference NewTagContentEntry},Path=Text}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="{StaticResource Plus}"
+                                     FontFamily="Fluent"
+                                     Size="20" />
+                </ImageButton.Source>
+            </ImageButton>
+            <FlexLayout Direction="Row"
+                        AlignContent="Start"
+                        Wrap="Wrap"
+                        AlignItems="Start"
+                        Grid.Row="8"
+                        BindableLayout.ItemsSource="{Binding Tags}"
+                        Grid.ColumnSpan="2">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <components:Chip ChipText="{Binding .}"
+                                         ChipForegroundColor="{StaticResource Black}"
+                                         ChipBackgroundColor="{StaticResource LightGray}"
+                                         ChipCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:LinkViewModel}},Path=RemoveTagCommand}"
+                                         IsIconVisible="True">
+                            <components:Chip.ChipIcon>
+                                <FontImageSource Glyph="{StaticResource Cross}"
+                                                 FontFamily="Fluent"
+                                                 Color="{StaticResource Black}"
+                                                 Size="20">
+                                </FontImageSource>
+                            </components:Chip.ChipIcon>
+                        </components:Chip>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+    </ScrollView>
 </ContentPage>

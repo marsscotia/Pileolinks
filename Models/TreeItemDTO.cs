@@ -29,6 +29,7 @@ namespace Pileolinks.Models
         string Description, 
         string Uri, 
         string AncestorId, 
-        string ItemType
+        string ItemType,
+        HashSet<string> Tags
         ) : ITreeItemDTO;
 }

@@ -12,16 +12,30 @@ public partial class DirectoryView : ContentPage
 		InitializeComponent();
 		BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
         ViewModel.DirectorySelected += ViewModel_DirectorySelected;
-        ViewModel.LinkAdded += ViewModel_LinkAdded;
+        ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
+        ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
         ViewModel.AlertRequested += ViewModel_AlertRequested;
 	}
+
+    private async void ViewModel_LaunchUrlRequested(object sender, string e)
+    {
+        try
+        {
+            Uri uri = new(e);
+            await Browser.Default.OpenAsync(uri);
+        }
+        catch (Exception)
+        {
+            await DisplayAlert("Something went wrong", "We couldn't open this link in your browser", "OK");
+        }
+    }
 
     private async void ViewModel_AlertRequested(object sender, AlertEventArgs e)
     {
         await DisplayAlert(e.Title, e.Message, e.ConfirmButton);
     }
 
-    private async void ViewModel_LinkAdded(object sender, LinkViewModel e)
+    private async void ViewModel_EditLinkRequested(object sender, LinkViewModel e)
     {
         await Navigation.PushAsync(new LinkView(e.Link));
     }

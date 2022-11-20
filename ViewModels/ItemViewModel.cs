@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.ViewModels
 {
-    public class ItemViewModel: BaseViewModel
+    public partial class ItemViewModel: BaseViewModel
     {
         protected readonly ITreeItem item;
 

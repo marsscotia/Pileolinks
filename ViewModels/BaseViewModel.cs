@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public partial class BaseViewModel : INotifyPropertyChanged
     {
 
         bool isBusy = false;
