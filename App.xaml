@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:Pileolinks.Views"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:components="clr-namespace:Pileolinks.Components"
              xmlns:local="clr-namespace:Pileolinks"
              x:Class="Pileolinks.App">
     <Application.Resources>
@@ -71,7 +72,7 @@
         <DataTemplate x:Key="LinkSummaryDataTemplate"
                       x:DataType="viewmodels:LinkViewModel">
             <Grid ColumnDefinitions="48, *, 48, 48"
-                  RowDefinitions="48, auto">
+                  RowDefinitions="48, 48, auto">
                 <Image Aspect="Center"
                        InputTransparent="True">
                     <Image.Source>
@@ -119,6 +120,23 @@
                                          Size="20" />
                     </ImageButton.Source>
                 </ImageButton>
+                <FlexLayout Direction="Row"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Wrap="Wrap"
+                            AlignContent="Start"
+                            AlignItems="Start"
+                            BindableLayout.ItemsSource="{Binding Tags}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <components:Chip ChipText="{Binding .}"
+                                             IsIconVisible="False" 
+                                             ChipBackgroundColor="{StaticResource LightGray}"
+                                             ChipForegroundColor="{StaticResource Black}"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+                            
             </Grid>
         </DataTemplate>
 
