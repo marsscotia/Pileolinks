@@ -2,6 +2,7 @@
 using Pileolinks.Services;
 using Pileolinks.Services.Interfaces;
 using Pileolinks.ViewModels;
+using Pileolinks.Views;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -25,8 +26,10 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IDataConverter, DataConverter>();
 		builder.Services.AddSingleton<IDataService, LocalStorageDataService>();
 		builder.Services.AddTransient<MainPageViewModel>();
+		builder.Services.AddTransient<SearchViewModel>();
 		builder.Services.AddTransient<TreeFlyout>();
 		builder.Services.AddTransient<MainPage>();
+		builder.Services.AddTransient<Search>();
 
 		return builder.Build();
 	}

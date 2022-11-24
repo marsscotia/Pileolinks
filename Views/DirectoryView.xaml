@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
-             x:Class="Pileolinks.DirectoryView"
+             x:Class="Pileolinks.Views.DirectoryView"
              Title="{Binding Name}"
              x:DataType="viewmodels:DirectoryViewModel">
     <Grid RowDefinitions="48, *, 48"

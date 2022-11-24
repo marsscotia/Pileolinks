@@ -2,7 +2,7 @@ using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.ViewModels;
 
-namespace Pileolinks;
+namespace Pileolinks.Views;
 
 public partial class DirectoryView : ContentPage
 {
@@ -15,7 +15,13 @@ public partial class DirectoryView : ContentPage
         ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
         ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
         ViewModel.AlertRequested += ViewModel_AlertRequested;
+        ViewModel.SearchRequested += ViewModel_SearchRequested;
 	}
+
+    private async void ViewModel_SearchRequested(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new Search());
+    }
 
     private async void ViewModel_LaunchUrlRequested(object sender, string e)
     {

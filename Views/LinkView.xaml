@@ -4,7 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
              xmlns:components="clr-namespace:Pileolinks.Components"
-             x:Class="Pileolinks.LinkView"
+             x:Class="Pileolinks.Views.LinkView"
              Title="{Binding Name}"
              x:DataType="viewmodels:LinkViewModel">
     <ContentPage.Resources>
