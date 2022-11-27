@@ -11,7 +11,27 @@ public partial class Search : ContentPage
 		InitializeComponent();
 		BindingContext = ViewModel = searchViewModel;
 		ViewModel.AlertRequested += AlertRequested;
+        ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
+        ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
 	}
+
+    private async void ViewModel_LaunchUrlRequested(object sender, string e)
+    {
+		try
+		{
+			Uri uri = new(e);
+			await Browser.Default.OpenAsync(uri);
+		}
+		catch (Exception)
+		{
+			await DisplayAlert("Something went wrong", "We couldn't open this link in your browser", "OK");
+		}
+    }
+
+    private async void ViewModel_EditLinkRequested(object sender, LinkViewModel e)
+    {
+		await Navigation.PushAsync(new LinkView(e.Link));
+    }
 
     protected override void OnAppearing()
     {
@@ -19,7 +39,13 @@ public partial class Search : ContentPage
 		ViewModel.Arriving();
     }
 
-	private async void AlertRequested(object sender, DialogRequestedEventArgs dialogRequestedEventArgs)
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+		ViewModel.Leaving();
+    }
+
+    private async void AlertRequested(object sender, DialogRequestedEventArgs dialogRequestedEventArgs)
 	{
 		if (dialogRequestedEventArgs.Cancel == null)
 		{

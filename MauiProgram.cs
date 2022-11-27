@@ -30,6 +30,7 @@ public static class MauiProgram
 		builder.Services.AddTransient<TreeFlyout>();
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<Search>();
+		builder.Services.AddTransient<DirectoryView>();
 
 		return builder.Build();
 	}

@@ -14,34 +14,58 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-<Grid ColumnDefinitions="*, 48"
-          RowDefinitions="48, 48, 48, 48, *, 48, 2*">
-        
-        <Label Text="Search for:" />
-        
-        <Entry Grid.Row="1"
-               Placeholder="Enter a search term here"
-               Text="{Binding SearchTerm,Mode=TwoWay}"/>
+<Grid ColumnDefinitions="*, 48, 48"
+          RowDefinitions="48, 48, 48, 48, 48, *, 48, 3*"
+      Padding="8"
+      RowSpacing="4"
+      ColumnSpacing="4">
 
-        <ImageButton Grid.Row="1"
-                     Grid.Column="1">
+        <ImageButton Grid.Row="0"
+                     Grid.Column="1"
+                     Command="{Binding ClearSearchCommand}">
+            <ImageButton.Source>
+                <FontImageSource Glyph="{StaticResource Eraser}"
+                                 FontFamily="Fluent"
+                                 Size="20" />
+            </ImageButton.Source>
+        </ImageButton>
+    
+        <ImageButton Grid.Row="0"
+                     Grid.Column="2"
+                     Command="{Binding SearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Search}"
                                  FontFamily="Fluent"
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
+    
+        
+
+        <Label Text="Search for:"
+               VerticalTextAlignment="End"
+               Grid.Row="1"/>
+        
+        <Entry Grid.Row="2"
+               Grid.ColumnSpan="2"
+               Placeholder="Enter a search term here"
+               Text="{Binding SearchTerm,Mode=TwoWay}"/>
+
+        
 
         <Label Text="Tags:"
-               Grid.Row="2"/>
+               Grid.Row="3"
+               VerticalTextAlignment="End"/>
 
-        <Entry Grid.Row="3"
+        <Entry Grid.Row="4"
                Placeholder="Add a new tag here"
                Text="{Binding TagContent, Mode=TwoWay}"
+               Grid.ColumnSpan="2"
                />
 
-        <ImageButton Grid.Row="3"
-                     Grid.Column="1">
+        <ImageButton Grid.Row="4"
+                     Grid.Column="2"
+                     Command="{Binding AddTagCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Plus}"
                                  FontFamily="Fluent"
@@ -54,8 +78,8 @@
                     AlignContent="Start"
                     AlignItems="Start"
                     BindableLayout.ItemsSource="{Binding SearchTags}"
-                    Grid.Row="4"
-                    Grid.ColumnSpan="2">
+                    Grid.Row="5"
+                    Grid.ColumnSpan="3">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <components:Chip ChipText="{Binding .}"
@@ -65,7 +89,9 @@
                                      IsIconVisible="True">
                         <components:Chip.ChipIcon>
                             <FontImageSource Glyph="{StaticResource Cross}"
-                                             FontFamily="Fluent" />
+                                             FontFamily="Fluent"
+                                             Color="{StaticResource Black}"
+                                             Size="20"/>
                         </components:Chip.ChipIcon>
                     </components:Chip>
                 </DataTemplate>
@@ -73,25 +99,26 @@
         </FlexLayout>
         
         <Label Text="Results:"
-               Grid.Row="5" />
+               Grid.Row="6"
+               VerticalTextAlignment="End"/>
 
-        <CollectionView Grid.Row="6"
-                        Grid.ColumnSpan="2"
+        <CollectionView Grid.Row="7"
+                        Grid.ColumnSpan="3"
                         ItemsSource="{Binding Results}"
                         ItemTemplate="{StaticResource LinkSummaryDataTemplate}"
                         IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
 
         <Label Text="When you search for links, you'll see the results here."
-               Grid.Row="6"
-               Grid.ColumnSpan="2"
+               Grid.Row="7"
+               Grid.ColumnSpan="3"
                HorizontalTextAlignment="Center"
-               IsVisible="{Binding SearchPerformed, Converter={StaticResource InverseBoolConverter}}" />
+               IsVisible="{Binding SearchPerformed, Converter={StaticResource InverseBoolConverter},Mode=OneWay}" />
 
         <Label Text="There aren't any results for that search. Why not try another?"
-               Grid.Row="6"
-               Grid.ColumnSpan="2"
+               Grid.Row="7"
+               Grid.ColumnSpan="3"
                HorizontalTextAlignment="Center"
-               IsVisible="{Binding SearchHasResults, Converter={StaticResource InverseBoolConverter}}" />
+               IsVisible="{Binding SearchHasNoResults, Mode=OneWay}" />
 
     </Grid>
 </ContentPage>

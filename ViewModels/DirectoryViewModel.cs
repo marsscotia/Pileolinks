@@ -157,10 +157,11 @@ namespace Pileolinks.ViewModels
                 }
             }
         }
-
+        
+        [RelayCommand]
         private void Search()
         {
-
+            SearchRequested?.Invoke(this, EventArgs.Empty);
         }
 
     }

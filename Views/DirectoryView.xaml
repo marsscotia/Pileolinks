@@ -9,7 +9,8 @@
           ColumnDefinitions="48, 48, *, 48"
           Padding="8">
         <ImageButton Grid.Column="3"
-                     Aspect="Center">
+                     Aspect="Center"
+                     Command="{Binding SearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Search}"
                                  FontFamily="Fluent"
