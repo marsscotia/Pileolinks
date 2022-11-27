@@ -14,11 +14,10 @@ namespace Pileolinks.ViewModels
     public partial class DirectoryViewModel : ItemViewModel
     {
         protected readonly LinkDirectory directory;
-        private Command addLinkCommand;
         private Command<string> addDirectoryCommand;
 
         public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
-        public Command AddLinkCommand => addLinkCommand ??= new Command(AddLink);
+        
         public Command<string> AddDirectoryCommand => addDirectoryCommand ??= new Command<string>(AddDirectory);
         public LinkDirectory LinkDirectory => directory;
         public string Name => item?.Name;
@@ -27,6 +26,7 @@ namespace Pileolinks.ViewModels
         public event EventHandler<LinkViewModel> EditLinkRequested;
         public event EventHandler<AlertEventArgs> AlertRequested;
         public event EventHandler<string> LaunchUrlRequested;
+        public event EventHandler SearchRequested;
         
         public DirectoryViewModel(LinkDirectory directory) : base(directory)
         {
@@ -89,6 +89,7 @@ namespace Pileolinks.ViewModels
             LaunchUrlRequested?.Invoke(this, ((LinkViewModel)sender).LinkUri);
         }
 
+        [RelayCommand]
         private void AddLink()
         {
             Link link = directory.AddLink();
@@ -155,6 +156,12 @@ namespace Pileolinks.ViewModels
                     Items.Insert(maxIndex + 1, directoryViewModel);
                 }
             }
+        }
+        
+        [RelayCommand]
+        private void Search()
+        {
+            SearchRequested?.Invoke(this, EventArgs.Empty);
         }
 
     }

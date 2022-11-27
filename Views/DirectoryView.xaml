@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
-             x:Class="Pileolinks.DirectoryView"
+             x:Class="Pileolinks.Views.DirectoryView"
              Title="{Binding Name}"
              x:DataType="viewmodels:DirectoryViewModel">
     <Grid RowDefinitions="48, *, 48"
           ColumnDefinitions="48, 48, *, 48"
           Padding="8">
         <ImageButton Grid.Column="3"
-                     Aspect="Center">
+                     Aspect="Center"
+                     Command="{Binding SearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Search}"
                                  FontFamily="Fluent"

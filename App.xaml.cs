@@ -2,7 +2,14 @@
 
 public partial class App : Application
 {
-	
+    /// <summary>
+    /// Note to future self: we provide an overridden static property
+    /// here so we can access the ServiceProvider property.
+    /// </summary>
+    public static new App Current => (App)Application.Current;
+    
+    public IServiceProvider ServiceProvider { get; private set; }
+
 	/// <summary>
     /// Note to future self: We don't seem to be able to 
     /// inject the MainPage type into the constructor here,
@@ -13,7 +20,7 @@ public partial class App : Application
     public App(IServiceProvider serviceProvider)
 	{
 		InitializeComponent();
-        
+        ServiceProvider = serviceProvider;
         MainPage = (MainPage)serviceProvider.GetRequiredService(typeof(MainPage));
 	}
 

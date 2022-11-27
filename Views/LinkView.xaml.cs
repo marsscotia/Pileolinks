@@ -2,7 +2,7 @@ using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.ViewModels;
 
-namespace Pileolinks;
+namespace Pileolinks.Views;
 
 public partial class LinkView : ContentPage
 {

@@ -26,6 +26,7 @@
         <x:String x:Key="Launch">&#xfa57;</x:String>
         <x:String x:Key="Go">&#xf158;</x:String>
         <x:String x:Key="Cross">&#xf368;</x:String>
+        <x:String x:Key="Eraser">&#xf9ef;</x:String>
 
         <DataTemplate x:Key="DirectorySummaryDataTemplate"
                       x:DataType="viewmodels:DirectoryViewModel">

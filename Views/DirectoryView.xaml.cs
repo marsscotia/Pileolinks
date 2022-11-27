@@ -1,21 +1,29 @@
+using Microsoft.Extensions.DependencyInjection;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.ViewModels;
 
-namespace Pileolinks;
+namespace Pileolinks.Views;
 
 public partial class DirectoryView : ContentPage
 {
-	public DirectoryViewModel ViewModel { get; private set; }
+    
+    public DirectoryViewModel ViewModel { get; private set; }
 	public DirectoryView(ITreeItem item = null)
 	{
 		InitializeComponent();
-		BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
+        BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
         ViewModel.DirectorySelected += ViewModel_DirectorySelected;
         ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
         ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
         ViewModel.AlertRequested += ViewModel_AlertRequested;
+        ViewModel.SearchRequested += ViewModel_SearchRequested;
 	}
+
+    private async void ViewModel_SearchRequested(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(App.Current.ServiceProvider.GetService<Search>());
+    }
 
     private async void ViewModel_LaunchUrlRequested(object sender, string e)
     {
@@ -42,7 +50,7 @@ public partial class DirectoryView : ContentPage
 
     private async void ViewModel_DirectorySelected(object sender, DirectoryViewModel e)
     {
-        await Navigation.PushAsync(new DirectoryView(e.LinkDirectory));
+        await Navigation.PushAsync(new DirectoryView(item: e.LinkDirectory));
     }
 
     public DirectoryView()
