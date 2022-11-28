@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.ViewModels;
+using Pileolinks.ViewModels.Factories.Interfaces;
 
 namespace Pileolinks.Views;
 
@@ -12,7 +13,8 @@ public partial class DirectoryView : ContentPage
 	public DirectoryView(ITreeItem item = null)
 	{
 		InitializeComponent();
-        BindingContext = ViewModel = new DirectoryViewModel((LinkDirectory)item);
+        ILinkDirectoryViewModelFactory linkDirectoryViewModelFactory = App.Current.ServiceProvider.GetRequiredService<ILinkDirectoryViewModelFactory>();
+        BindingContext = ViewModel = linkDirectoryViewModelFactory.GetDirectoryViewModel((LinkDirectory)item);
         ViewModel.DirectorySelected += ViewModel_DirectorySelected;
         ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
         ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
@@ -56,7 +58,8 @@ public partial class DirectoryView : ContentPage
     public DirectoryView()
     {
 		InitializeComponent();
-		BindingContext = ViewModel = new DirectoryViewModel(null);
+        ILinkDirectoryViewModelFactory linkDirectoryViewModelFactory = App.Current.ServiceProvider.GetRequiredService<ILinkDirectoryViewModelFactory>();
+		BindingContext = ViewModel = linkDirectoryViewModelFactory.GetDirectoryViewModel(null);
     }
 
     protected override void OnAppearing()
@@ -72,5 +75,11 @@ public partial class DirectoryView : ContentPage
         {
             ViewModel.AddDirectoryCommand.Execute(name);
         }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        ViewModel.Leaving();
     }
 }

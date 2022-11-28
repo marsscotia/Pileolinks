@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
+using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels.Factories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +30,7 @@ namespace Pileolinks.ViewModels
         public event EventHandler<string> LaunchUrlRequested;
         public event EventHandler SearchRequested;
         
-        public DirectoryViewModel(LinkDirectory directory) : base(directory)
+        public DirectoryViewModel(IDataService dataService, LinkDirectory directory) : base(dataService, directory)
         {
             this.directory = directory;
             if (directory != null)
@@ -39,7 +41,7 @@ namespace Pileolinks.ViewModels
 
         private void Directory_DescendantAdded(object sender, ITreeItem e)
         {
-            InsertIntoDescendants(new DirectoryViewModel((LinkDirectory)e));
+            InsertIntoDescendants(new(dataService, (LinkDirectory)e));
         }
 
         public void Initialise()
@@ -54,13 +56,13 @@ namespace Pileolinks.ViewModels
             {
                 foreach (var item in directory.Directories.OrderBy(d => d.Name))
                 {
-                    DirectoryViewModel directoryViewModel = new((LinkDirectory)item);
+                    DirectoryViewModel directoryViewModel = new(dataService, (LinkDirectory)item);
                     directoryViewModel.DirectorySelected += DescendantDirectorySelected;
                     Items.Add(directoryViewModel);
                 }
                 foreach (var item in directory.Descendants.Where(d => d.Type != TreeItemType.Directory).OrderBy(d => d.Name))
                 {
-                    LinkViewModel linkViewModel = new((Link)item);
+                    LinkViewModel linkViewModel = new(dataService, (Link)item);
                     linkViewModel.EditLinkRequested += EditLink;
                     linkViewModel.LaunchUrlRequested += LaunchUrl;
                     Items.Add(linkViewModel);
@@ -93,7 +95,7 @@ namespace Pileolinks.ViewModels
         private void AddLink()
         {
             Link link = directory.AddLink();
-            LinkViewModel linkViewModel = new(link);
+            LinkViewModel linkViewModel = new(dataService, link);
             EditLinkRequested?.Invoke(this, linkViewModel);
         }
 
@@ -162,6 +164,19 @@ namespace Pileolinks.ViewModels
         private void Search()
         {
             SearchRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SaveCollection()
+        {
+            if (!NoItem)
+            {
+                _ = dataService.SaveCollection(GetTopLevelAncestor()); 
+            }
+        }
+
+        public void Leaving()
+        {
+            SaveCollection();
         }
 
     }

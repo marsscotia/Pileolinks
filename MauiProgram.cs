@@ -2,6 +2,8 @@
 using Pileolinks.Services;
 using Pileolinks.Services.Interfaces;
 using Pileolinks.ViewModels;
+using Pileolinks.ViewModels.Factories;
+using Pileolinks.ViewModels.Factories.Interfaces;
 using Pileolinks.Views;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -31,6 +33,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<Search>();
 		builder.Services.AddTransient<DirectoryView>();
+		builder.Services.AddSingleton<ILinkViewModelFactory, LinkViewModelFactory>();
+		builder.Services.AddSingleton<ILinkDirectoryViewModelFactory, DirectoryViewModelFactory>();
 
 		return builder.Build();
 	}

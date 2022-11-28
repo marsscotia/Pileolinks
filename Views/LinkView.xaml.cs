@@ -1,6 +1,8 @@
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.ViewModels;
+using Pileolinks.ViewModels.Factories;
+using Pileolinks.ViewModels.Factories.Interfaces;
 
 namespace Pileolinks.Views;
 
@@ -10,12 +12,20 @@ public partial class LinkView : ContentPage
 	public LinkView(ITreeItem item = null)
 	{
 		InitializeComponent();
-        BindingContext = ViewModel = new LinkViewModel((Link)item);
+		ILinkViewModelFactory linkViewModelFactory = App.Current.ServiceProvider.GetService<ILinkViewModelFactory>();
+        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel((Link)item);
 	}
 
 	public LinkView()
     {
 		InitializeComponent();
-		BindingContext = ViewModel = new LinkViewModel(null);
+        ILinkViewModelFactory linkViewModelFactory = App.Current.ServiceProvider.GetService<ILinkViewModelFactory>();
+        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel(null);
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        ViewModel.Leaving();
     }
 }
