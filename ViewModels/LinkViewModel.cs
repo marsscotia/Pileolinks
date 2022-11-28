@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Models;
+using Pileolinks.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,7 +68,7 @@ namespace Pileolinks.ViewModels
 
         public ObservableCollection<string> Tags { get; private set; } = new();
 
-        public LinkViewModel(Link link) : base(link)
+        public LinkViewModel(IDataService dataService, Link link) : base(dataService, link)
         {
             this.link = link;
             foreach (var tag in link.Tags.OrderBy(t => t))
@@ -109,5 +110,14 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        private void SaveCollection()
+        {
+            _ = dataService.SaveCollection(GetTopLevelAncestor());
+        }
+
+        public void Leaving()
+        {
+            SaveCollection();
+        }
     }
 }

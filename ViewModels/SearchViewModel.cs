@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels.Factories.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace Pileolinks.ViewModels
@@ -24,6 +25,7 @@ namespace Pileolinks.ViewModels
         private readonly List<Link> links = new();
 
         private readonly IDataService dataService;
+        private readonly ILinkViewModelFactory linkViewModelFactory;
 
         public bool SearchHasNoResults => SearchPerformed && !Results.Any();
 
@@ -37,9 +39,10 @@ namespace Pileolinks.ViewModels
         public event EventHandler<string> LaunchUrlRequested;
         public event EventHandler<LinkViewModel> EditLinkRequested;
 
-        public SearchViewModel(IDataService dataService) 
+        public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory) 
         {
             this.dataService = dataService;
+            this.linkViewModelFactory = linkViewModelFactory;
             Results.CollectionChanged += Results_CollectionChanged;
             SearchPerformed = false;
         }
@@ -79,7 +82,7 @@ namespace Pileolinks.ViewModels
 
             foreach (var link in results)
             {
-                LinkViewModel linkViewModel = new(link);
+                LinkViewModel linkViewModel = linkViewModelFactory.GetLinkViewModel(link);
                 linkViewModel.LaunchUrlRequested += LinkViewModel_LaunchUrlRequested;
                 linkViewModel.EditLinkRequested += LinkViewModel_EditLinkRequested;
                 Results.Add(linkViewModel);
@@ -134,6 +137,7 @@ namespace Pileolinks.ViewModels
 
         public void Arriving()
         {
+            links.Clear();
             List<ITreeItem> collections = dataService.GetTopLevelTreeItems();
             Stack<ITreeItem> stack = new();
             foreach (var collection in collections) 
