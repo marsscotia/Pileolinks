@@ -44,6 +44,9 @@
                    VerticalTextAlignment="End"
                    Grid.Row="6" />
             <Entry Grid.Row="7"
+                   ReturnType="Done"
+                   ReturnCommand="{Binding AddTagCommand}"
+                   ReturnCommandParameter="{Binding Source={x:Reference NewTagContentEntry},Path=Text}"
                    Text="{Binding NewTagContent,Mode=TwoWay}"
                    x:Name="NewTagContentEntry"/>
             <ImageButton Grid.Row="7"

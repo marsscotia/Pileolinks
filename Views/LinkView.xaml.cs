@@ -28,4 +28,5 @@ public partial class LinkView : ContentPage
         base.OnDisappearing();
         ViewModel.Leaving();
     }
+
 }
