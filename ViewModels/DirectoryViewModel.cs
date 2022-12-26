@@ -41,7 +41,9 @@ namespace Pileolinks.ViewModels
 
         private void Directory_DescendantAdded(object sender, ITreeItem e)
         {
-            InsertIntoDescendants(new(dataService, (LinkDirectory)e));
+            DirectoryViewModel directoryViewModel = new(dataService, (LinkDirectory)e);
+            directoryViewModel.DirectorySelected += DescendantDirectorySelected;
+            InsertIntoDescendants(directoryViewModel);
         }
 
         public void Initialise()
