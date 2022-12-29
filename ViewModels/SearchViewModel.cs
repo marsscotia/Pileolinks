@@ -70,9 +70,9 @@ namespace Pileolinks.ViewModels
 
             if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                results = results.Where(l => l.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
-                || l.Description.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
-                || l.Uri.ToString().Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+                results = results.Where(l => (l.Name is not null && l.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+                || (l.Description is not null &&  l.Description.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+                || (l.Uri is not null && l.Uri.ToString().Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)));
             }
 
             if (SearchTags.Any())
