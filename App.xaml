@@ -72,7 +72,7 @@
 
         <DataTemplate x:Key="LinkSummaryDataTemplate"
                       x:DataType="viewmodels:LinkViewModel">
-            <Grid ColumnDefinitions="48, *, 48, 48"
+            <Grid ColumnDefinitions="48, *, 48, 48, 48"
                   RowDefinitions="48, 48, auto">
                 <Image Aspect="Center"
                        InputTransparent="True">
@@ -87,6 +87,15 @@
                        VerticalTextAlignment="Center"
                        InputTransparent="True" />
                 <ImageButton Grid.Column="2"
+                             Aspect="Center"
+                             Command="{Binding RequestDeleteCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource Glyph="{StaticResource Bin}"
+                                         FontFamily="Fluent"
+                                         Size="20" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <ImageButton Grid.Column="3"
                              Aspect="Center"
                              Command="{Binding EditLinkCommand}">
                     <ImageButton.Source>
@@ -112,7 +121,7 @@
                                               Buttons="Primary" />
                     </Label.GestureRecognizers>
                 </Label>
-                <ImageButton Grid.Column="3"
+                <ImageButton Grid.Column="4"
                              Aspect="Center"
                              Command="{Binding LaunchUrlCommand}">
                     <ImageButton.Source>

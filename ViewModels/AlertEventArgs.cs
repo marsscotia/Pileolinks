@@ -11,5 +11,6 @@ namespace Pileolinks.ViewModels
         public string Message { get; set; } = "Message";
         public string Title { get; set; } = "Title";
         public string ConfirmButton { get; set; } = "OK";
+        public string CancelButton { get; set; } = "Cancel";
     }
 }

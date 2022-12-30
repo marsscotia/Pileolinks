@@ -18,6 +18,7 @@ namespace Pileolinks.ViewModels
 
         public event EventHandler EditLinkRequested;
         public event EventHandler LaunchUrlRequested;
+        public event EventHandler DeleteLinkRequested;
 
         public Link Link => link;
         public string LinkUri
@@ -108,6 +109,12 @@ namespace Pileolinks.ViewModels
             {
                 Tags.Remove(tag);
             }
+        }
+
+        [RelayCommand]
+        private void RequestDelete()
+        {
+            DeleteLinkRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void SaveCollection()
