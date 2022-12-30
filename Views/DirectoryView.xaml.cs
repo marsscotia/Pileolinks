@@ -20,7 +20,17 @@ public partial class DirectoryView : ContentPage
         ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
         ViewModel.AlertRequested += ViewModel_AlertRequested;
         ViewModel.SearchRequested += ViewModel_SearchRequested;
+        ViewModel.ConfirmDeleteLinkRequested += ViewModel_ConfirmDeleteLinkRequested;
 	}
+
+    private async void ViewModel_ConfirmDeleteLinkRequested(object sender, RequestDeleteLinkEventArgs e)
+    {
+        bool result = await DisplayAlert(e.Title, e.Message, e.ConfirmButton, e.CancelButton);
+        if (result)
+        {
+            ViewModel.DeleteLinkCommand.Execute(e.Id);
+        }
+    }
 
     private async void ViewModel_SearchRequested(object sender, EventArgs e)
     {

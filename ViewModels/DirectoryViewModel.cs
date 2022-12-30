@@ -3,6 +3,7 @@ using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
 using Pileolinks.ViewModels.Factories.Interfaces;
+using Pileolinks.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,7 @@ namespace Pileolinks.ViewModels
         public event EventHandler<AlertEventArgs> AlertRequested;
         public event EventHandler<string> LaunchUrlRequested;
         public event EventHandler SearchRequested;
+        public event EventHandler<RequestDeleteLinkEventArgs> ConfirmDeleteLinkRequested;
         
         public DirectoryViewModel(IDataService dataService, LinkDirectory directory) : base(dataService, directory)
         {
@@ -67,6 +69,7 @@ namespace Pileolinks.ViewModels
                     LinkViewModel linkViewModel = new(dataService, (Link)item);
                     linkViewModel.EditLinkRequested += EditLink;
                     linkViewModel.LaunchUrlRequested += LaunchUrl;
+                    linkViewModel.DeleteLinkRequested += DeleteLinkRequested;
                     Items.Add(linkViewModel);
                 } 
             }
@@ -91,6 +94,32 @@ namespace Pileolinks.ViewModels
         private void LaunchUrl(object sender, EventArgs e)
         {
             LaunchUrlRequested?.Invoke(this, ((LinkViewModel)sender).LinkUri);
+        }
+
+        private void DeleteLinkRequested(object sender, EventArgs e)
+        {
+            LinkViewModel linkViewModel = (LinkViewModel)sender;
+            ConfirmDeleteLinkRequested?.Invoke(this, new RequestDeleteLinkEventArgs
+            {
+                Title = "Are you sure?",
+                Message = $"Do you really want to delete {linkViewModel.Name}?",
+                ConfirmButton = "Delete",
+                CancelButton = "Cancel",
+                Id = linkViewModel.Item.Id,
+                Name = linkViewModel.Name
+            });
+        }
+
+        [RelayCommand]
+        private void DeleteLink(string id)
+        {
+            LinkViewModel linkViewModel = (LinkViewModel)Items.First(i => i.Item.Id == id);
+            linkViewModel.EditLinkRequested -= EditLink;
+            linkViewModel.DeleteLinkRequested -= DeleteLinkRequested;
+            linkViewModel.LaunchUrlRequested -= LaunchUrl;
+            Items.Remove(linkViewModel);
+            _ = directory.Descendants.Remove(linkViewModel.Link);
+            SaveCollection();
         }
 
         [RelayCommand]
