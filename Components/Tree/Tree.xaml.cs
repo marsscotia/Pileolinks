@@ -110,13 +110,13 @@ public partial class Tree : ContentView
 
     private void SetSelectedItem(ITreeItem selected)
     {
+        foreach (ITreeItemViewModel item in ItemsSource.Where(i => i.IsSelected))
+        {
+            item.IsSelected = false;
+        }
         ITreeItemViewModel viewModel = ItemsSource.FirstOrDefault(i => i.TreeItem == selected);
         if (viewModel != null)
         {
-            foreach (ITreeItemViewModel item in ItemsSource.Where(i => i.IsSelected))
-            {
-                item.IsSelected = false;
-            }
             viewModel.IsSelected = true;
         }
     }
