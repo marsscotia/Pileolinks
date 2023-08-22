@@ -135,6 +135,19 @@ namespace Pileolinks.ViewModels
             SearchTags.Remove(tagContent);
         }
 
+        [RelayCommand]
+        private void SearchOrAddTag()
+        {
+            if (!string.IsNullOrWhiteSpace(TagContent))
+            {
+                AddTag();
+            }
+            else
+            {
+                Search();
+            }
+        }
+
         public void Arriving()
         {
             links.Clear();
