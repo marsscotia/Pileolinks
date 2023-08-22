@@ -49,7 +49,8 @@
         <Entry Grid.Row="2"
                Grid.ColumnSpan="2"
                Placeholder="Enter a search term here"
-               Text="{Binding SearchTerm,Mode=TwoWay}"/>
+               Text="{Binding SearchTerm,Mode=TwoWay}"
+               ReturnCommand="{Binding SearchCommand}"/>
 
         
 
@@ -61,6 +62,7 @@
                Placeholder="Add a new tag here"
                Text="{Binding TagContent, Mode=TwoWay}"
                Grid.ColumnSpan="2"
+               ReturnCommand="{Binding SearchOrAddTagCommand}"
                />
 
         <ImageButton Grid.Row="4"
