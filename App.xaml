@@ -27,6 +27,8 @@
         <x:String x:Key="Go">&#xf158;</x:String>
         <x:String x:Key="Cross">&#xf368;</x:String>
         <x:String x:Key="Eraser">&#xf9ef;</x:String>
+        <x:String x:Key="Copy">&#xf32c;</x:String>
+        <x:String x:Key="LevelUp">&#xf1a4;</x:String>
 
         <DataTemplate x:Key="DirectorySummaryDataTemplate"
                       x:DataType="viewmodels:DirectoryViewModel">
@@ -72,7 +74,7 @@
 
         <DataTemplate x:Key="LinkSummaryDataTemplate"
                       x:DataType="viewmodels:LinkViewModel">
-            <Grid ColumnDefinitions="48, *, 48, 48, 48"
+            <Grid ColumnDefinitions="48, *, 48, 48, 48, 48"
                   RowDefinitions="48, 48, auto">
                 <Image Aspect="Center"
                        InputTransparent="True">
@@ -126,6 +128,15 @@
                              Command="{Binding LaunchUrlCommand}">
                     <ImageButton.Source>
                         <FontImageSource Glyph="{StaticResource Launch}"
+                                         FontFamily="Fluent"
+                                         Size="20" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <ImageButton Grid.Column="5"
+                             Aspect="Center"
+                             Command="{Binding RequestCopyUrlCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource Glyph="{StaticResource Copy}"
                                          FontFamily="Fluent"
                                          Size="20" />
                     </ImageButton.Source>

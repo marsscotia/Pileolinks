@@ -27,6 +27,7 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<IDataConverter, DataConverter>();
 		builder.Services.AddSingleton<IDataService, LocalStorageDataService>();
+		builder.Services.AddSingleton<IEssentialsService, EssentialsService>();
 		builder.Services.AddTransient<MainPageViewModel>();
 		builder.Services.AddTransient<SearchViewModel>();
 		builder.Services.AddTransient<TreeFlyout>();
