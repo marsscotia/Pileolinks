@@ -12,15 +12,17 @@ namespace Pileolinks.ViewModels.Factories
     public class DirectoryViewModelFactory : ILinkDirectoryViewModelFactory
     {
         private readonly IDataService dataService;
+        private readonly IEssentialsService essentialsService;
 
-        public DirectoryViewModelFactory(IDataService dataService) 
+        public DirectoryViewModelFactory(IDataService dataService, IEssentialsService essentialsService) 
         {
             this.dataService = dataService;
+            this.essentialsService = essentialsService;
         }
 
         public DirectoryViewModel GetDirectoryViewModel(LinkDirectory directory)
         {
-            return new DirectoryViewModel(dataService, directory);
+            return new DirectoryViewModel(dataService, essentialsService, directory);
         }
     }
 }

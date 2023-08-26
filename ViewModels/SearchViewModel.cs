@@ -26,6 +26,7 @@ namespace Pileolinks.ViewModels
 
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
+        private readonly IEssentialsService essentialsService;
 
         public bool SearchHasNoResults => SearchPerformed && !Results.Any();
 
@@ -39,10 +40,11 @@ namespace Pileolinks.ViewModels
         public event EventHandler<string> LaunchUrlRequested;
         public event EventHandler<LinkViewModel> EditLinkRequested;
 
-        public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory) 
+        public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory, IEssentialsService essentialsService) 
         {
             this.dataService = dataService;
             this.linkViewModelFactory = linkViewModelFactory;
+            this.essentialsService = essentialsService;
             Results.CollectionChanged += Results_CollectionChanged;
             SearchPerformed = false;
         }
@@ -85,10 +87,16 @@ namespace Pileolinks.ViewModels
                 LinkViewModel linkViewModel = linkViewModelFactory.GetLinkViewModel(link);
                 linkViewModel.LaunchUrlRequested += LinkViewModel_LaunchUrlRequested;
                 linkViewModel.EditLinkRequested += LinkViewModel_EditLinkRequested;
+                linkViewModel.CopyUrlRequested += LinkViewModel_CopyUrlRequested;
                 Results.Add(linkViewModel);
             }
 
             SearchPerformed = true;
+        }
+
+        private async void LinkViewModel_CopyUrlRequested(object sender, string e)
+        {
+            await essentialsService.SetClipboardTextAsync(e);
         }
 
         private void LinkViewModel_EditLinkRequested(object sender, EventArgs e)
@@ -176,6 +184,7 @@ namespace Pileolinks.ViewModels
                 {
                     result.EditLinkRequested -= LinkViewModel_EditLinkRequested;
                     result.LaunchUrlRequested -= LinkViewModel_LaunchUrlRequested;
+                    result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
                 }
             }
         }

@@ -17,6 +17,7 @@ namespace Pileolinks.ViewModels
     public partial class DirectoryViewModel : ItemViewModel
     {
         protected readonly LinkDirectory directory;
+        private readonly IEssentialsService essentialsService;
         private Command<string> addDirectoryCommand;
 
         public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
@@ -32,9 +33,10 @@ namespace Pileolinks.ViewModels
         public event EventHandler SearchRequested;
         public event EventHandler<RequestDeleteLinkEventArgs> ConfirmDeleteLinkRequested;
         
-        public DirectoryViewModel(IDataService dataService, LinkDirectory directory) : base(dataService, directory)
+        public DirectoryViewModel(IDataService dataService, IEssentialsService essentialsService, LinkDirectory directory) : base(dataService, directory)
         {
             this.directory = directory;
+            this.essentialsService = essentialsService;
             if (directory != null)
             {
                 directory.DescendantAdded += Directory_DescendantAdded; 
@@ -43,7 +45,7 @@ namespace Pileolinks.ViewModels
 
         private void Directory_DescendantAdded(object sender, ITreeItem e)
         {
-            DirectoryViewModel directoryViewModel = new(dataService, (LinkDirectory)e);
+            DirectoryViewModel directoryViewModel = new(dataService, essentialsService, (LinkDirectory)e);
             directoryViewModel.DirectorySelected += DescendantDirectorySelected;
             InsertIntoDescendants(directoryViewModel);
         }
@@ -60,7 +62,7 @@ namespace Pileolinks.ViewModels
             {
                 foreach (var item in directory.Directories.OrderBy(d => d.Name))
                 {
-                    DirectoryViewModel directoryViewModel = new(dataService, (LinkDirectory)item);
+                    DirectoryViewModel directoryViewModel = new(dataService, essentialsService, (LinkDirectory)item);
                     directoryViewModel.DirectorySelected += DescendantDirectorySelected;
                     Items.Add(directoryViewModel);
                 }
@@ -70,9 +72,15 @@ namespace Pileolinks.ViewModels
                     linkViewModel.EditLinkRequested += EditLink;
                     linkViewModel.LaunchUrlRequested += LaunchUrl;
                     linkViewModel.DeleteLinkRequested += DeleteLinkRequested;
+                    linkViewModel.CopyUrlRequested += LinkViewModel_CopyUrlRequested;
                     Items.Add(linkViewModel);
                 } 
             }
+        }
+
+        private async void LinkViewModel_CopyUrlRequested(object sender, string e)
+        {
+            await essentialsService.SetClipboardTextAsync(e);
         }
 
         [RelayCommand]
@@ -117,6 +125,7 @@ namespace Pileolinks.ViewModels
             linkViewModel.EditLinkRequested -= EditLink;
             linkViewModel.DeleteLinkRequested -= DeleteLinkRequested;
             linkViewModel.LaunchUrlRequested -= LaunchUrl;
+            linkViewModel.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
             Items.Remove(linkViewModel);
             _ = directory.Descendants.Remove(linkViewModel.Link);
             SaveCollection();
