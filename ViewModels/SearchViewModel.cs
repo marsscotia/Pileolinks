@@ -105,7 +105,15 @@ namespace Pileolinks.ViewModels
 
         private async void LinkViewModel_CopyUrlRequested(object sender, string e)
         {
-            await essentialsService.SetClipboardTextAsync(e);
+            try
+            {
+                await essentialsService.SetClipboardTextAsync(e);
+                await essentialsService.ShowToastAsync("URL copied.");
+            }
+            catch (Exception)
+            {
+                await essentialsService.ShowToastAsync("We couldn't copy the URL. Please try again later.");
+            }
         }
 
         private void LinkViewModel_EditLinkRequested(object sender, EventArgs e)
