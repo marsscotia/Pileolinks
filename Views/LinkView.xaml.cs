@@ -13,14 +13,14 @@ public partial class LinkView : ContentPage
 	{
 		InitializeComponent();
 		ILinkViewModelFactory linkViewModelFactory = App.Current.ServiceProvider.GetService<ILinkViewModelFactory>();
-        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel((Link)item);
+        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel((Link)item, hasOpenParent: false);
 	}
 
 	public LinkView()
     {
 		InitializeComponent();
         ILinkViewModelFactory linkViewModelFactory = App.Current.ServiceProvider.GetService<ILinkViewModelFactory>();
-        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel(null);
+        BindingContext = ViewModel = linkViewModelFactory.GetLinkViewModel(null, hasOpenParent: false);
     }
 
     protected override void OnDisappearing()

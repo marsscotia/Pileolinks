@@ -18,9 +18,9 @@ namespace Pileolinks.ViewModels.Factories
             this.dataService = dataService;
         }
 
-        public LinkViewModel GetLinkViewModel(Link link)
+        public LinkViewModel GetLinkViewModel(Link link, bool hasOpenParent = false)
         {
-            return new LinkViewModel(dataService, link);
+            return new LinkViewModel(dataService, link, hasOpenParent);
         }
     }
 }

@@ -15,11 +15,13 @@ namespace Pileolinks.ViewModels
     {
         protected readonly Link link;
         private string newTagContent;
+        private readonly bool hasOpenParent;
 
         public event EventHandler EditLinkRequested;
         public event EventHandler LaunchUrlRequested;
         public event EventHandler DeleteLinkRequested;
         public event EventHandler<string> CopyUrlRequested;
+        public event EventHandler OpenParentRequested;
 
         public Link Link => link;
         public string LinkUri
@@ -67,12 +69,16 @@ namespace Pileolinks.ViewModels
             set => SetProperty(ref newTagContent, value);
         }
 
+        public bool HasOpenParent => hasOpenParent;
+
+        public LinkDirectory Parent => (LinkDirectory)link.Ancestor;
 
         public ObservableCollection<string> Tags { get; private set; } = new();
 
-        public LinkViewModel(IDataService dataService, Link link) : base(dataService, link)
+        public LinkViewModel(IDataService dataService, Link link, bool hasOpenParent) : base(dataService, link)
         {
             this.link = link;
+            this.hasOpenParent = hasOpenParent;
             foreach (var tag in link.Tags.OrderBy(t => t))
             {
                 Tags.Add(tag);
@@ -122,6 +128,12 @@ namespace Pileolinks.ViewModels
         private void RequestCopyUrl()
         {
             CopyUrlRequested?.Invoke(this, link.Uri);
+        }
+
+        [RelayCommand]
+        private void RequestOpenParent()
+        {
+            OpenParentRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void SaveCollection()

@@ -68,7 +68,7 @@ namespace Pileolinks.ViewModels
                 }
                 foreach (var item in directory.Descendants.Where(d => d.Type != TreeItemType.Directory).OrderBy(d => d.Name))
                 {
-                    LinkViewModel linkViewModel = new(dataService, (Link)item);
+                    LinkViewModel linkViewModel = new(dataService, (Link)item, hasOpenParent: false);
                     linkViewModel.EditLinkRequested += EditLink;
                     linkViewModel.LaunchUrlRequested += LaunchUrl;
                     linkViewModel.DeleteLinkRequested += DeleteLinkRequested;
@@ -135,7 +135,7 @@ namespace Pileolinks.ViewModels
         private void AddLink()
         {
             Link link = directory.AddLink();
-            LinkViewModel linkViewModel = new(dataService, link);
+            LinkViewModel linkViewModel = new(dataService, link, hasOpenParent: false);
             EditLinkRequested?.Invoke(this, linkViewModel);
         }
 
