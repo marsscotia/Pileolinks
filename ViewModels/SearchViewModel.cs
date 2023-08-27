@@ -39,6 +39,7 @@ namespace Pileolinks.ViewModels
         public event EventHandler<DialogRequestedEventArgs> AlertRequested;
         public event EventHandler<string> LaunchUrlRequested;
         public event EventHandler<LinkViewModel> EditLinkRequested;
+        public event EventHandler<LinkDirectory> OpenParentRequested;
 
         public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory, IEssentialsService essentialsService) 
         {
@@ -64,6 +65,8 @@ namespace Pileolinks.ViewModels
                 {
                     result.EditLinkRequested -= LinkViewModel_EditLinkRequested;
                     result.LaunchUrlRequested -= LinkViewModel_LaunchUrlRequested;
+                    result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
+                    result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
                 }
                 Results.Clear();
             }
@@ -84,14 +87,20 @@ namespace Pileolinks.ViewModels
 
             foreach (var link in results)
             {
-                LinkViewModel linkViewModel = linkViewModelFactory.GetLinkViewModel(link);
+                LinkViewModel linkViewModel = linkViewModelFactory.GetLinkViewModel(link, hasOpenParent: true);
                 linkViewModel.LaunchUrlRequested += LinkViewModel_LaunchUrlRequested;
                 linkViewModel.EditLinkRequested += LinkViewModel_EditLinkRequested;
                 linkViewModel.CopyUrlRequested += LinkViewModel_CopyUrlRequested;
+                linkViewModel.OpenParentRequested += LinkViewModel_OpenParentRequested;
                 Results.Add(linkViewModel);
             }
 
             SearchPerformed = true;
+        }
+
+        private void LinkViewModel_OpenParentRequested(object sender, EventArgs e)
+        {
+            OpenParentRequested?.Invoke(this, ((LinkViewModel)sender).Parent);
         }
 
         private async void LinkViewModel_CopyUrlRequested(object sender, string e)
@@ -185,6 +194,7 @@ namespace Pileolinks.ViewModels
                     result.EditLinkRequested -= LinkViewModel_EditLinkRequested;
                     result.LaunchUrlRequested -= LinkViewModel_LaunchUrlRequested;
                     result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
+                    result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
                 }
             }
         }

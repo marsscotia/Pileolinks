@@ -13,7 +13,13 @@ public partial class Search : ContentPage
 		ViewModel.AlertRequested += AlertRequested;
         ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
         ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
+        ViewModel.OpenParentRequested += ViewModel_OpenParentRequested;
 	}
+
+    private async void ViewModel_OpenParentRequested(object sender, Models.LinkDirectory e)
+    {
+        await Navigation.PushAsync(new DirectoryView(e));
+    }
 
     private async void ViewModel_LaunchUrlRequested(object sender, string e)
     {
@@ -42,6 +48,10 @@ public partial class Search : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+		ViewModel.AlertRequested -= AlertRequested;
+		ViewModel.EditLinkRequested -= ViewModel_EditLinkRequested;
+		ViewModel.LaunchUrlRequested -= ViewModel_LaunchUrlRequested;
+		ViewModel.OpenParentRequested -= ViewModel_OpenParentRequested;
 		ViewModel.Leaving();
     }
 

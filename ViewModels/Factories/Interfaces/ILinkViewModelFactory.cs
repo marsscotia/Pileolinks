@@ -9,6 +9,6 @@ namespace Pileolinks.ViewModels.Factories.Interfaces
 {
     public interface ILinkViewModelFactory
     {
-        LinkViewModel GetLinkViewModel(Link link);
+        LinkViewModel GetLinkViewModel(Link link, bool hasOpenParent);
     }
 }
