@@ -114,7 +114,7 @@ public partial class Tree : ContentView
         {
             item.IsSelected = false;
         }
-        ITreeItemViewModel viewModel = ItemsSource.FirstOrDefault(i => i.TreeItem == selected);
+        ITreeItemViewModel viewModel = ItemsSource.FirstOrDefault(i => i.TreeItem.Id == selected?.Id);
         if (viewModel != null)
         {
             viewModel.IsSelected = true;
