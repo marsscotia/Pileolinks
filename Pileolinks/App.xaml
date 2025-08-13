@@ -75,7 +75,7 @@
         <DataTemplate x:Key="LinkSummaryDataTemplate"
                       x:DataType="viewmodels:LinkViewModel">
             <Grid ColumnDefinitions="48, *, 48, 48, 48, 48, 48"
-                  RowDefinitions="48, 48, auto">
+                  RowDefinitions="48, 48, auto, 24">
                 <Image Aspect="Center"
                        InputTransparent="True">
                     <Image.Source>
@@ -167,7 +167,13 @@
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>
-                            
+                <Label Grid.Row="3"
+                       Margin="0, 4, 0, 0"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="6"
+                       HorizontalTextAlignment="Start"
+                       FontSize="Caption"
+                       Text="{Binding UsedInformation, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
 

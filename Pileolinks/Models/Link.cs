@@ -1,19 +1,16 @@
 ﻿using Pileolinks.Components.Tree;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pileolinks.Models
 {
-    public class Link : ITreeItem
+    public class Link(string id, ITreeItem parent, string uri = null, string name = null, HashSet<string> tags = default, int used = 0, DateOnly lastUsed = default) : ITreeItem
     {
-        private readonly string id;
-        private string name;
+        private readonly string id = id;
+        private string name = name;
         private string description;
-        private ITreeItem parent;
-        private string uri;
+        private ITreeItem parent = parent;
+        private string uri = uri;
+        private int used = used;
+        private DateOnly lastUsed = lastUsed;
 
         public string Id => id;
 
@@ -35,7 +32,19 @@ namespace Pileolinks.Models
             set => uri = value;
         }
 
-        public HashSet<string> Tags { get; private set; }
+        public int Used
+        {
+            get => used;
+            set => used = value;
+        }
+
+        public DateOnly LastUsed
+        {
+            get => lastUsed;
+            set => lastUsed = value;
+        }
+
+        public HashSet<string> Tags { get; private set; } = tags ?? [];
 
         public TreeItemType Type => TreeItemType.Link;
 
@@ -55,17 +64,6 @@ namespace Pileolinks.Models
         public event EventHandler Deleted;
         public event EventHandler<ITreeItem> Moved;
         public event EventHandler NameChanged;
-
-        public Link(string id, ITreeItem parent, string uri = null, string name = null, HashSet<string> tags = default)
-        {
-            this.id = id;
-            this.parent = parent;
-            this.uri = uri;
-            this.name = name;
-            Tags = tags ?? new();
-        }
-
-        
 
         public bool AddDirectory(string name)
         {
