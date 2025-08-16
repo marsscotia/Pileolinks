@@ -71,15 +71,12 @@ namespace Pileolinks.ViewModels
                 {
                     string numberText = link.Used switch
                     {
-                        1 => "once",
-                        2 => "twice",
-                        _ => $"{link.Used} times"
+                        1 => $"Visited once on {link.LastUsed:d}",
+                        2 => $"Visited twice; most recently on {link.LastUsed:d}",
+                        _ => $"Visited {link.Used} times; most recently on {link.LastUsed:d}"
                     };
 
-                    string numberOfVisits = $"Visited {numberText}";
-                    string mostRecentUsage = link.LastUsed == DateOnly.MinValue ? string.Empty : $"; most recently on {link.LastUsed:d}";
-
-                    return $"{numberOfVisits}{mostRecentUsage}";
+                    return numberText;
                 }
                 return string.Empty;
             }
@@ -164,6 +161,7 @@ namespace Pileolinks.ViewModels
             link.Used++;
             link.LastUsed = DateOnly.FromDateTime(DateTime.Now);
             OnPropertyChanged(nameof(UsedInformation));
+            SaveCollection();
         }
 
         public void Leaving()

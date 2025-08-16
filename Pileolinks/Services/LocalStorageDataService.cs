@@ -1,14 +1,8 @@
 ﻿using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Pileolinks.Services
 {
@@ -24,8 +18,8 @@ namespace Pileolinks.Services
 
         public List<ITreeItem> GetTopLevelTreeItems()
         {
-            List<ITreeItem> results = new();
-            List<ITreeItemDTO> treeItems = new();
+            List<ITreeItem> results = [];
+            List<ITreeItemDTO> treeItems = [];
             var files = Directory.EnumerateFiles(FileSystem.Current.AppDataDirectory);
             foreach (var file in files)
             {
@@ -51,7 +45,7 @@ namespace Pileolinks.Services
         {
             bool result;
             string fileName = $"{FilePrefix}{linkDirectory.Id}.json";
-            List<ITreeItemDTO> treeItemDTOs = _converter.GetTreeItemDTOs(new List<ITreeItem> { linkDirectory });
+            List<ITreeItemDTO> treeItemDTOs = _converter.GetTreeItemDTOs([linkDirectory]);
             try
             {
                 File.WriteAllText(Path.Combine(FileSystem.Current.AppDataDirectory, fileName), JsonSerializer.Serialize(treeItemDTOs));
