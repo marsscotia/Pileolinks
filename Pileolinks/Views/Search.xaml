@@ -14,14 +14,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-<Grid ColumnDefinitions="*, 48, 48"
-          RowDefinitions="48, 48, 48, 48, 48, *, 48, 3*"
+<Grid ColumnDefinitions="*, 48, 48, 48, 48"
+          RowDefinitions="48, 48, 48, 48, 48, *, 48, 48, 3*"
       Padding="8"
       RowSpacing="4"
       ColumnSpacing="4">
 
         <ImageButton Grid.Row="0"
-                     Grid.Column="1"
+                     Grid.Column="3"
                      Command="{Binding ClearSearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Eraser}"
@@ -31,7 +31,7 @@
         </ImageButton>
     
         <ImageButton Grid.Row="0"
-                     Grid.Column="2"
+                     Grid.Column="4"
                      Command="{Binding SearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Search}"
@@ -99,26 +99,46 @@
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </FlexLayout>
-        
-        <Label Text="Results:"
+
+        <Label Text="Sort:"
                Grid.Row="6"
+               Grid.Column="0"
+               HorizontalTextAlignment="End"
+               VerticalTextAlignment="Center"
+               IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
+
+        <Picker Grid.Row="6"
+                Grid.Column="1"
+                Grid.ColumnSpan="4"
+                ItemsSource="{Binding Sorts}"
+                SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
+                ItemDisplayBinding="{Binding Description}"
+                IsVisible="{Binding SearchHasResults, Mode=OneWay}">
+            <Picker.Behaviors>
+                <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                Command="{Binding SortCommand}" />
+            </Picker.Behaviors>
+        </Picker>
+
+        <Label Text="Results:"
+               Grid.Row="7"
                VerticalTextAlignment="End"/>
 
-        <CollectionView Grid.Row="7"
-                        Grid.ColumnSpan="3"
+        <CollectionView Grid.Row="8"
+                        Grid.ColumnSpan="5"
                         ItemsSource="{Binding Results}"
                         ItemTemplate="{StaticResource LinkSummaryDataTemplate}"
                         IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
 
         <Label Text="When you search for links, you'll see the results here."
-               Grid.Row="7"
-               Grid.ColumnSpan="3"
+               Grid.Row="8"
+               Grid.ColumnSpan="5"
                HorizontalTextAlignment="Center"
                IsVisible="{Binding SearchPerformed, Converter={StaticResource InverseBoolConverter},Mode=OneWay}" />
 
         <Label Text="There aren't any results for that search. Why not try another?"
-               Grid.Row="7"
-               Grid.ColumnSpan="3"
+               Grid.Row="8"
+               Grid.ColumnSpan="5"
                HorizontalTextAlignment="Center"
                IsVisible="{Binding SearchHasNoResults, Mode=OneWay}" />
 

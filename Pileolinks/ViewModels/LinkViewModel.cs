@@ -82,6 +82,10 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        public int Used => link.Used;
+
+        public DateOnly LastUsed => link.LastUsed;
+
         public bool HasOpenParent => hasOpenParent;
 
         public LinkDirectory Parent => (LinkDirectory)link.Ancestor;
