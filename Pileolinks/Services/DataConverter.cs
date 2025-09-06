@@ -14,7 +14,7 @@ namespace Pileolinks.Services
     {
         public List<ITreeItemDTO> GetTreeItemDTOs(List<ITreeItem> treeItems)
         {
-            List<ITreeItemDTO> treeDTOs = new();
+            List<ITreeItemDTO> treeDTOs = [];
 
             Stack<ITreeItem> stack = new();
             foreach (ITreeItem item in treeItems)
@@ -33,7 +33,7 @@ namespace Pileolinks.Services
                             Id : current.Id,
                             Name : current.Name,
                             ItemType : current.Type.ToString(),
-                            DescendantIds : current.Descendants.Select(d => d.Id).ToList(),
+                            DescendantIds : [.. current.Descendants.Select(d => d.Id)],
                             AncestorId : current.Ancestor?.Id
                         ));
                         foreach (ITreeItem child in current.Descendants)
@@ -49,7 +49,9 @@ namespace Pileolinks.Services
                             AncestorId: current.Ancestor.Id,
                             Description : ((Link)current).Description,
                             Uri : ((Link)current).Uri,
-                            Tags : ((Link)current).Tags
+                            Tags : ((Link)current).Tags,
+                            Used: ((Link)current).Used,
+                            LastUsed: ((Link)current).LastUsed
                             ));
                         break;
                     default:
@@ -80,7 +82,7 @@ namespace Pileolinks.Services
                             break;
                         case TreeItemType.Link:
                             LinkDTO linkDTO = (LinkDTO)item;
-                            items.Add(new Link(linkDTO.Id, null, linkDTO.Uri, linkDTO.Name, linkDTO.Tags)
+                            items.Add(new Link(linkDTO.Id, null, linkDTO.Uri, linkDTO.Name, linkDTO.Tags, linkDTO.Used, linkDTO.LastUsed)
                             {
                                 Description = linkDTO.Description
                             });

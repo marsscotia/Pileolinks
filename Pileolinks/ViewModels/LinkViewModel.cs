@@ -1,13 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pileolinks.ViewModels
 {
@@ -69,11 +63,34 @@ namespace Pileolinks.ViewModels
             set => SetProperty(ref newTagContent, value);
         }
 
+        public string UsedInformation
+        {
+            get
+            {
+                if (link.Used > 0 && link.LastUsed > DateOnly.MinValue)
+                {
+                    string numberText = link.Used switch
+                    {
+                        1 => $"Visited once on {link.LastUsed:d}",
+                        2 => $"Visited twice; most recently on {link.LastUsed:d}",
+                        _ => $"Visited {link.Used} times; most recently on {link.LastUsed:d}"
+                    };
+
+                    return numberText;
+                }
+                return string.Empty;
+            }
+        }
+
+        public int Used => link.Used;
+
+        public DateOnly LastUsed => link.LastUsed;
+
         public bool HasOpenParent => hasOpenParent;
 
         public LinkDirectory Parent => (LinkDirectory)link.Ancestor;
 
-        public ObservableCollection<string> Tags { get; private set; } = new();
+        public ObservableCollection<string> Tags { get; private set; } = [];
 
         public LinkViewModel(IDataService dataService, Link link, bool hasOpenParent) : base(dataService, link)
         {
@@ -95,6 +112,7 @@ namespace Pileolinks.ViewModels
         private void LaunchUrl()
         {
             LaunchUrlRequested?.Invoke(this, EventArgs.Empty);
+            UpdateLinkUsage();
         }
 
         [RelayCommand]
@@ -128,6 +146,7 @@ namespace Pileolinks.ViewModels
         private void RequestCopyUrl()
         {
             CopyUrlRequested?.Invoke(this, link.Uri);
+            UpdateLinkUsage();
         }
 
         [RelayCommand]
@@ -139,6 +158,14 @@ namespace Pileolinks.ViewModels
         private void SaveCollection()
         {
             _ = dataService.SaveCollection(GetTopLevelAncestor());
+        }
+
+        private void UpdateLinkUsage()
+        {
+            link.Used++;
+            link.LastUsed = DateOnly.FromDateTime(DateTime.Now);
+            OnPropertyChanged(nameof(UsedInformation));
+            SaveCollection();
         }
 
         public void Leaving()

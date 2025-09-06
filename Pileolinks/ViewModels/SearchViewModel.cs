@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels.Enums;
 using Pileolinks.ViewModels.Factories.Interfaces;
 using System.Collections.ObjectModel;
 
@@ -22,7 +23,18 @@ namespace Pileolinks.ViewModels
         [NotifyPropertyChangedFor(nameof(SearchHasResults))]
         private bool searchPerformed;
 
-        private readonly List<Link> links = new();
+        [ObservableProperty]
+        private Sort selectedSort;
+
+        private readonly List<Link> links = [];
+
+        private readonly List<Sort> sorts =
+        [
+            new Sort(SortType.MostVisited, "Most visited"),
+            new Sort(SortType.LeastVisited, "Least visited"),
+            new Sort(SortType.MostRecentlyVisited, "Most recently visited"),
+            new Sort(SortType.LeastRecentlyVisited, "Least recently visited")
+        ];
 
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
@@ -35,6 +47,8 @@ namespace Pileolinks.ViewModels
         public ObservableCollection<string> SearchTags { get; private set; } = new();
 
         public ObservableCollection<LinkViewModel> Results { get; private set; } = new();
+
+        public List<Sort> Sorts => sorts;
 
         public event EventHandler<DialogRequestedEventArgs> AlertRequested;
         public event EventHandler<string> LaunchUrlRequested;
@@ -203,6 +217,28 @@ namespace Pileolinks.ViewModels
                     result.LaunchUrlRequested -= LinkViewModel_LaunchUrlRequested;
                     result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
                     result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
+                }
+            }
+        }
+
+        [RelayCommand]
+        private async Task Sort()
+        {
+            if (SearchPerformed && SearchHasResults)
+            {
+                
+                var sortedResults =  await Task.Run(() => SelectedSort.SortType switch
+                {
+                    SortType.MostVisited => [.. Results.OrderByDescending(r => r.Used).ThenByDescending(r => r.LastUsed)],
+                    SortType.LeastVisited => [.. Results.OrderBy(r => r.Used).ThenByDescending(r => r.LastUsed)],
+                    SortType.MostRecentlyVisited => [.. Results.OrderByDescending(r => r.LastUsed).ThenByDescending(r => r.Used)],
+                    SortType.LeastRecentlyVisited => [.. Results.OrderBy(r => r.LastUsed).ThenByDescending(r => r.Used)],
+                    _ => Results.ToList()
+                });
+
+                for (int i = 0; i < sortedResults.Count; i++)
+                {
+                    Results.Move(Results.IndexOf(sortedResults[i]), i);
                 }
             }
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Pileolinks.Models
 {
@@ -30,6 +25,8 @@ namespace Pileolinks.Models
         string Uri, 
         string AncestorId, 
         string ItemType,
-        HashSet<string> Tags
+        HashSet<string> Tags,
+        int Used = 0,
+        DateOnly LastUsed = default
         ) : ITreeItemDTO;
 }
