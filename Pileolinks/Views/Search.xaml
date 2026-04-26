@@ -128,7 +128,14 @@
                         Grid.ColumnSpan="5"
                         ItemsSource="{Binding Results}"
                         ItemTemplate="{StaticResource LinkSummaryDataTemplate}"
-                        IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
+                        IsVisible="{Binding HasResultsAndIsNotLoading, Mode=OneWay}"/>
+    
+        <ActivityIndicator Grid.Row="8"
+                           Grid.ColumnSpan="5"
+                           IsRunning="{Binding Loading, Mode=OneWay}"
+                           IsVisible="{Binding Loading, Mode=OneWay}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
 
         <Label Text="When you search for links, you'll see the results here."
                Grid.Row="8"
