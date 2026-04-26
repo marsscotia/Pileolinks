@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11716.220
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pileolinks", "Pileolinks\Pileolinks.csproj", "{B486E94A-CC4E-4482-9986-41F8A9B32EB1}"
 EndProject
@@ -10,6 +10,9 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		MAUIWindowsDeploy|Any CPU = MAUIWindowsDeploy|Any CPU
+		MAUIWindowsDeploy|x64 = MAUIWindowsDeploy|x64
+		MAUIWindowsDeploy|x86 = MAUIWindowsDeploy|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
@@ -20,8 +23,18 @@ Global
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|x64.ActiveCfg = Debug|x64
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|x64.Build.0 = Debug|x64
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|x64.Deploy.0 = Debug|x64
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|x86.ActiveCfg = Debug|x86
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Debug|x86.Build.0 = Debug|x86
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|Any CPU.ActiveCfg = MAUIWindowsDeploy|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|Any CPU.Build.0 = MAUIWindowsDeploy|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|Any CPU.Deploy.0 = MAUIWindowsDeploy|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x64.ActiveCfg = Debug|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x64.Build.0 = Debug|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x64.Deploy.0 = Debug|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x86.ActiveCfg = MAUIWindowsDeploy|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x86.Build.0 = MAUIWindowsDeploy|Any CPU
+		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.MAUIWindowsDeploy|x86.Deploy.0 = MAUIWindowsDeploy|Any CPU
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B486E94A-CC4E-4482-9986-41F8A9B32EB1}.Release|x64.ActiveCfg = Release|x64
