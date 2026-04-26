@@ -113,11 +113,8 @@
                 ItemsSource="{Binding Sorts}"
                 SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
                 ItemDisplayBinding="{Binding Description}"
-                IsVisible="{Binding SearchHasResults, Mode=OneWay}">
-            <Picker.Behaviors>
-                <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                Command="{Binding SortCommand}" />
-            </Picker.Behaviors>
+                IsVisible="{Binding SearchHasResults, Mode=OneWay}"
+                SelectedIndexChanged="Picker_SelectedIndexChanged">
         </Picker>
 
         <Label Text="Results:"

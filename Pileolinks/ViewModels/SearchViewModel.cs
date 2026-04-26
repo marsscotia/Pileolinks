@@ -30,9 +30,6 @@ namespace Pileolinks.ViewModels
         [NotifyPropertyChangedFor(nameof(HasResultsAndIsNotLoading))]
         public partial bool Loading { get; set; }
 
-        [ObservableProperty]
-        public partial bool HasResultsAndIsNotLoading { get; set; }
-
         private readonly List<Link> links = [];
 
         private readonly List<Sort> sorts =
@@ -48,6 +45,8 @@ namespace Pileolinks.ViewModels
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
         private readonly IEssentialsService essentialsService;
+
+        public bool HasResultsAndIsNotLoading => SearchHasResults && !Loading;
 
         public bool SearchHasNoResults => SearchPerformed && !Results.Any();
 

@@ -65,7 +65,10 @@ public partial class Search : ContentPage
 		{
             await DisplayAlertAsync(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm, dialogRequestedEventArgs.Cancel);
         }
-		
-		
 	}
+
+    private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+		await ViewModel.SortCommand.ExecuteAsync(null);
+    }
 }
