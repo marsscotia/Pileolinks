@@ -9,27 +9,33 @@ using System.Collections.ObjectModel;
 
 namespace Pileolinks.ViewModels
 {
-    [INotifyPropertyChanged]
-    public partial class SearchViewModel
+    public partial class SearchViewModel : ObservableObject
     {
         [ObservableProperty]
-        private string searchTerm;
+        public partial string SearchTerm { get; set; }
 
         [ObservableProperty]
-        private string tagContent;
+        public partial string TagContent { get; set; }
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(SearchHasNoResults))]
         [NotifyPropertyChangedFor(nameof(SearchHasResults))]
-        private bool searchPerformed;
+        [NotifyPropertyChangedFor(nameof(HasResultsAndIsNotLoading))]
+        public partial bool SearchPerformed { get; set; }
 
         [ObservableProperty]
-        private Sort selectedSort;
+        public partial Sort SelectedSort { get; set; }
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasResultsAndIsNotLoading))]
+        public partial bool Loading { get; set; }
 
         private readonly List<Link> links = [];
 
         private readonly List<Sort> sorts =
         [
+            new Sort(SortType.Alphabetical, "A - Z"),
+            new Sort(SortType.ReverseAlphabetical, "Z - A"),
             new Sort(SortType.MostVisited, "Most visited"),
             new Sort(SortType.LeastVisited, "Least visited"),
             new Sort(SortType.MostRecentlyVisited, "Most recently visited"),
@@ -39,6 +45,8 @@ namespace Pileolinks.ViewModels
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
         private readonly IEssentialsService essentialsService;
+
+        public bool HasResultsAndIsNotLoading => SearchHasResults && !Loading;
 
         public bool SearchHasNoResults => SearchPerformed && !Results.Any();
 
@@ -62,6 +70,8 @@ namespace Pileolinks.ViewModels
             this.essentialsService = essentialsService;
             Results.CollectionChanged += Results_CollectionChanged;
             SearchPerformed = false;
+            SelectedSort = sorts.FirstOrDefault(s => s.SortType == SortType.Alphabetical);
+            Loading = false;
         }
 
         private void Results_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -71,8 +81,10 @@ namespace Pileolinks.ViewModels
         }
 
         [RelayCommand]
-        private void Search()
+        private async Task Search()
         {
+            Loading = true;
+            
             if (Results.Any())
             {
                 foreach (var result in Results)
@@ -109,7 +121,10 @@ namespace Pileolinks.ViewModels
                 Results.Add(linkViewModel);
             }
 
+            Loading = false;
             SearchPerformed = true;
+
+            await Sort();
         }
 
         private void LinkViewModel_OpenParentRequested(object sender, EventArgs e)
@@ -175,7 +190,7 @@ namespace Pileolinks.ViewModels
         }
 
         [RelayCommand]
-        private void SearchOrAddTag()
+        private async Task SearchOrAddTag()
         {
             if (!string.IsNullOrWhiteSpace(TagContent))
             {
@@ -183,7 +198,7 @@ namespace Pileolinks.ViewModels
             }
             else
             {
-                Search();
+                await Search();
             }
         }
 
@@ -226,9 +241,12 @@ namespace Pileolinks.ViewModels
         {
             if (SearchPerformed && SearchHasResults)
             {
+                Loading = true;
                 
                 var sortedResults =  await Task.Run(() => SelectedSort.SortType switch
                 {
+                    SortType.Alphabetical => [.. Results.OrderBy(r => r.Name)],
+                    SortType.ReverseAlphabetical => [.. Results.OrderByDescending(r => r.Name)],
                     SortType.MostVisited => [.. Results.OrderByDescending(r => r.Used).ThenByDescending(r => r.LastUsed)],
                     SortType.LeastVisited => [.. Results.OrderBy(r => r.Used).ThenByDescending(r => r.LastUsed)],
                     SortType.MostRecentlyVisited => [.. Results.OrderByDescending(r => r.LastUsed).ThenByDescending(r => r.Used)],
@@ -240,6 +258,8 @@ namespace Pileolinks.ViewModels
                 {
                     Results.Move(Results.IndexOf(sortedResults[i]), i);
                 }
+
+                Loading = false;
             }
         }
     }

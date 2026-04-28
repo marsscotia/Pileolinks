@@ -30,7 +30,7 @@ public partial class Search : ContentPage
 		}
 		catch (Exception)
 		{
-			await DisplayAlert("Something went wrong", "We couldn't open this link in your browser", "OK");
+			await DisplayAlertAsync("Something went wrong", "We couldn't open this link in your browser", "OK");
 		}
     }
 
@@ -59,13 +59,16 @@ public partial class Search : ContentPage
 	{
 		if (dialogRequestedEventArgs.Cancel == null)
 		{
-			await DisplayAlert(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm);
+			await DisplayAlertAsync(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm);
 		}
 		else 
 		{
-            await DisplayAlert(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm, dialogRequestedEventArgs.Cancel);
+            await DisplayAlertAsync(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm, dialogRequestedEventArgs.Cancel);
         }
-		
-		
 	}
+
+    private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+		await ViewModel.SortCommand.ExecuteAsync(null);
+    }
 }

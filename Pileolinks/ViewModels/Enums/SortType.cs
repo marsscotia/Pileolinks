@@ -8,6 +8,8 @@ namespace Pileolinks.ViewModels.Enums
 {
     public enum SortType
     {
+        Alphabetical,
+        ReverseAlphabetical,
         MostVisited,
         LeastVisited,
         MostRecentlyVisited,
