@@ -159,7 +159,7 @@
                             AlignItems="Start"
                             BindableLayout.ItemsSource="{Binding Tags}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="x:String">
                             <components:Chip ChipText="{Binding .}"
                                              IsIconVisible="False" 
                                              ChipBackgroundColor="{StaticResource LightGray}"

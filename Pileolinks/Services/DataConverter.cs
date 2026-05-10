@@ -49,7 +49,7 @@ namespace Pileolinks.Services
                             AncestorId: current.Ancestor.Id,
                             Description : ((Link)current).Description,
                             Uri : ((Link)current).Uri,
-                            Tags : ((Link)current).Tags,
+                            Tags : new HashSet<string>(((Link)current).Tags),
                             Used: ((Link)current).Used,
                             LastUsed: ((Link)current).LastUsed
                             ));
