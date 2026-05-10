@@ -83,7 +83,7 @@
                     Grid.Row="5"
                     Grid.ColumnSpan="3">
             <BindableLayout.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="x:String">
                     <components:Chip ChipText="{Binding .}"
                                      ChipBackgroundColor="{StaticResource LightGray}"
                                      ChipForegroundColor="{StaticResource Black}"

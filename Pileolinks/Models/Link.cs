@@ -1,4 +1,5 @@
-﻿using Pileolinks.Components.Tree;
+﻿using System.Collections.ObjectModel;
+using Pileolinks.Components.Tree;
 
 namespace Pileolinks.Models
 {
@@ -44,7 +45,7 @@ namespace Pileolinks.Models
             set => lastUsed = value;
         }
 
-        public HashSet<string> Tags { get; private set; } = tags ?? [];
+        public ObservableCollection<string> Tags { get; private set; } = new(tags ?? []);
 
         public TreeItemType Type => TreeItemType.Link;
 

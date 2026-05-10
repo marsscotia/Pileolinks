@@ -2,7 +2,8 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Pileolinks.Components.Chip">
+             x:Class="Pileolinks.Components.Chip"
+             x:Name="chip">
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:MathExpressionConverter x:Key="MathsExpressionConverter" />
@@ -15,7 +16,8 @@
             <Label x:Name="ChipTextLabel"       
                    Padding="8, 4, 8, 4"
                    VerticalOptions="Center"
-                   VerticalTextAlignment="Center"/>
+                   VerticalTextAlignment="Center"
+                   Text="{Binding ChipText, Mode=OneWay, Source={x:Reference chip}}"/>
             <ImageButton x:Name="ChipImageButton"
                          Clicked="ChipImageButton_Clicked"
                          BackgroundColor="Transparent"

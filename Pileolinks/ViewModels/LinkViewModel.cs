@@ -118,9 +118,9 @@ namespace Pileolinks.ViewModels
         [RelayCommand]
         private void AddTag(string tag)
         {
-            bool success = link.Tags.Add(tag);
-            if (success) 
+            if (!link.Tags.Contains(tag))
             {
+                link.Tags.Add(tag);
                 Tags.Add(tag);
             }
             NewTagContent = string.Empty;

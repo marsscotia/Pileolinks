@@ -66,7 +66,7 @@ public partial class Chip : ContentView
     static void OnChipTextChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var chip = (Chip)bindable;
-        chip.ChipTextLabel.Text = (string)newValue;
+        chip.ChipTextLabel?.Text = (string)newValue;
     }
 
     static void OnChipIconChanged(BindableObject bindable, object oldValue, object newValue)
