@@ -14,6 +14,7 @@ namespace Pileolinks.ViewModels
         private Command<ITreeItem> deleteDirectoryCommand;
         private Command<string> addDirectoryCommand, addCollectionCommand, renameDirectoryCommand;
         private readonly IDataService dataService;
+        private readonly ILinkCache linkCache;
 
         public event EventHandler<ITreeItem> DeleteRequested;
         public event EventHandler AddDirectoryRequested;
@@ -55,14 +56,11 @@ namespace Pileolinks.ViewModels
         public Command RequestRenameDirectoryCommand => requestRenameDirectoryCommand ??= new Command(RequestRenameDirectory);
         public Command<string> RenameDirectoryCommand => renameDirectoryCommand ??= new Command<string>(RenameDirectory);
 
-        public MainPageViewModel(IDataService dataService)
+        public MainPageViewModel(IDataService dataService, ILinkCache linkCache)
         {
             this.dataService = dataService;
-            ObservableCollection<ITreeItem> items = new();
-            foreach (ITreeItem item in dataService.GetTopLevelTreeItems())
-            {
-                items.Add(item);
-            }
+            this.linkCache = linkCache;
+            ObservableCollection<ITreeItem> items = [.. linkCache.GetTopLevelDirectories()];
             Items = items;
         }
 

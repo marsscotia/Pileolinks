@@ -45,6 +45,7 @@ namespace Pileolinks.ViewModels
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
         private readonly IEssentialsService essentialsService;
+        private readonly ILinkCache linkCache;
 
         public bool HasResultsAndIsNotLoading => SearchHasResults && !Loading;
 
@@ -63,11 +64,12 @@ namespace Pileolinks.ViewModels
         public event EventHandler<LinkViewModel> EditLinkRequested;
         public event EventHandler<LinkDirectory> OpenParentRequested;
 
-        public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory, IEssentialsService essentialsService) 
+        public SearchViewModel(IDataService dataService, ILinkViewModelFactory linkViewModelFactory, IEssentialsService essentialsService, ILinkCache linkCache) 
         {
             this.dataService = dataService;
             this.linkViewModelFactory = linkViewModelFactory;
             this.essentialsService = essentialsService;
+            this.linkCache = linkCache;
             Results.CollectionChanged += Results_CollectionChanged;
             SearchPerformed = false;
             SelectedSort = sorts.FirstOrDefault(s => s.SortType == SortType.Alphabetical);
@@ -205,21 +207,7 @@ namespace Pileolinks.ViewModels
         public void Arriving()
         {
             links.Clear();
-            List<ITreeItem> collections = dataService.GetTopLevelTreeItems();
-            Stack<ITreeItem> stack = new();
-            foreach (var collection in collections) 
-            {
-                stack.Push(collection);
-            }
-            while (stack.Count > 0)
-            {
-                LinkDirectory directory = (LinkDirectory)stack.Pop();
-                links.AddRange(directory.Descendants.Where(d => d.Type == TreeItemType.Link).Select(l => (Link)l));
-                foreach (var item in directory.Directories)
-                {
-                    stack.Push(item);
-                }
-            }
+            links.AddRange(linkCache.GetAllLinks());
         }
 
         public void Leaving()
