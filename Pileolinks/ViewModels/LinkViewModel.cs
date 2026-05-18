@@ -100,6 +100,14 @@ namespace Pileolinks.ViewModels
             {
                 Tags.Add(tag);
             }
+            link.UsageChanged += Link_UsageChanged;
+        }
+
+        private void Link_UsageChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(UsedInformation));
+            OnPropertyChanged(nameof(Used));
+            OnPropertyChanged(nameof(LastUsed));
         }
 
         [RelayCommand]
@@ -164,7 +172,6 @@ namespace Pileolinks.ViewModels
         {
             link.Used++;
             link.LastUsed = DateOnly.FromDateTime(DateTime.Now);
-            OnPropertyChanged(nameof(UsedInformation));
             SaveCollection();
         }
 

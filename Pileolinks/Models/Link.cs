@@ -36,13 +36,27 @@ namespace Pileolinks.Models
         public int Used
         {
             get => used;
-            set => used = value;
+            set
+            {
+                if (used != value)
+                {
+                    used = value;
+                    UsageChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         public DateOnly LastUsed
         {
             get => lastUsed;
-            set => lastUsed = value;
+            set
+            {
+                if (lastUsed != value)
+                {
+                    lastUsed = value;
+                    UsageChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         public ObservableCollection<string> Tags { get; private set; } = new(tags ?? []);
@@ -65,6 +79,7 @@ namespace Pileolinks.Models
         public event EventHandler Deleted;
         public event EventHandler<ITreeItem> Moved;
         public event EventHandler NameChanged;
+        public event EventHandler UsageChanged;
 
         public bool AddDirectory(string name)
         {
