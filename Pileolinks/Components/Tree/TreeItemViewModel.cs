@@ -31,11 +31,11 @@ namespace Pileolinks.Components.Tree
 
         public bool HasDescendants => Descendants.Any();
 
-        public bool HasDirectories => treeItem.HasDirectories;
+        public bool HasDirectories => treeItem is IParentTreeItem parentItem && parentItem.HasDirectories;
 
         public string Name => treeItem.Name;
 
-        public List<ITreeItem> Directories => treeItem.Directories;
+        public List<ITreeItem> Directories => (treeItem as IParentTreeItem)?.Directories ?? [];
 
         public ITreeItem TreeItem => treeItem;
 
@@ -115,9 +115,12 @@ namespace Pileolinks.Components.Tree
         public TreeItemViewModel(ITreeItem item)
         {
             treeItem = item;
-            item.DescendantAdded += AddDescendant;
+            if (item is IParentTreeItem parentItem)
+            {
+                parentItem.DescendantAdded += AddDescendant;
+                parentItem.Moved += MoveItem;
+            }
             item.Deleted += Delete;
-            item.Moved += MoveItem;
             item.NameChanged += Rename;
             Depth = CalculateDepth();
             Descendants = descendants.AsReadOnly();

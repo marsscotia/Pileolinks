@@ -67,9 +67,9 @@ namespace Pileolinks.ViewModels
 
         private void AddDirectory(string name)
         {
-            if (Selected != null && !string.IsNullOrWhiteSpace(name))
+            if (Selected is IParentTreeItem parentItem && !string.IsNullOrWhiteSpace(name))
             {
-                bool valid = Selected.AddDirectory(name);
+                bool valid = parentItem.AddDirectory(name);
                 if (!valid)
                 {
                     AlertRequested?.Invoke(this, new AlertEventArgs
@@ -145,9 +145,9 @@ namespace Pileolinks.ViewModels
         private void Delete(ITreeItem selected)
         {
             selected.Delete();
-            if (selected.HasAncestor)
+            if (selected.HasAncestor && selected.Ancestor is IParentTreeItem parentAncestor)
             {
-                _ = selected.Ancestor.Descendants.Remove(selected);
+                _ = parentAncestor.Descendants.Remove(selected);
             }
             else
             {
@@ -186,9 +186,9 @@ namespace Pileolinks.ViewModels
 
         private void RenameDirectory(string name)
         {
-            if (Selected.HasAncestor)
+            if (Selected.HasAncestor && Selected.Ancestor is IParentTreeItem parentAncestor)
             {
-                if (Selected.Ancestor.Directories.Any(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                if (parentAncestor.Directories.Any(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 {
                     AlertRequested?.Invoke(this, new AlertEventArgs
                     {
