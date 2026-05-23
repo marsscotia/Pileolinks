@@ -107,15 +107,12 @@
                VerticalTextAlignment="Center"
                IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
 
-        <Picker Grid.Row="6"
-                Grid.Column="1"
-                Grid.ColumnSpan="4"
-                ItemsSource="{Binding Sorts}"
-                SelectedItem="{Binding SelectedSort, Mode=TwoWay}"
-                ItemDisplayBinding="{Binding Description}"
-                IsVisible="{Binding SearchHasResults, Mode=OneWay}"
-                SelectedIndexChanged="Picker_SelectedIndexChanged">
-        </Picker>
+        <components:SortPicker Grid.Row="6"
+                              Grid.Column="1"
+                              Grid.ColumnSpan="4"
+                              SortBehavior="{Binding SortBehavior}"
+                              ShowLabel="False"
+                              IsVisible="{Binding SearchHasResults, Mode=OneWay}"/>
 
         <Label Text="Results:"
                Grid.Row="7"

@@ -2,6 +2,8 @@
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels.Behaviors;
+using Pileolinks.ViewModels.Enums;
 using Pileolinks.ViewModels.Factories.Interfaces;
 using Pileolinks.Views;
 using System;
@@ -13,18 +15,20 @@ using System.Threading.Tasks;
 
 namespace Pileolinks.ViewModels
 {
-    
+
     public partial class DirectoryViewModel : ItemViewModel
     {
         protected readonly LinkDirectory directory;
         private readonly IEssentialsService essentialsService;
         private Command<string> addDirectoryCommand;
+        private readonly SortableBehavior<ItemViewModel> sortBehavior;
 
         public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
-        
+
         public Command<string> AddDirectoryCommand => addDirectoryCommand ??= new Command<string>(AddDirectory);
         public LinkDirectory LinkDirectory => directory;
         public string Name => item?.Name;
+        public SortableBehavior<ItemViewModel> SortBehavior => sortBehavior;
 
         public event EventHandler<DirectoryViewModel> DirectorySelected;
         public event EventHandler<LinkViewModel> EditLinkRequested;
@@ -37,6 +41,48 @@ namespace Pileolinks.ViewModels
         {
             this.directory = directory;
             this.essentialsService = essentialsService;
+
+            // Initialize sortable behavior with sort logic for mixed ItemViewModel types
+            sortBehavior = new SortableBehavior<ItemViewModel>(
+                Items,
+                async (items, selectedSort) =>
+                {
+                    return await Task.Run(() => selectedSort.SortType switch
+                    {
+                        SortType.Alphabetical => [.. items.OrderBy(i => i.Item.Name)],
+                        SortType.ReverseAlphabetical => [.. items.OrderByDescending(i => i.Item.Name)],
+                        SortType.MostVisited => [.. items
+                            .Where(i => i.Type != TreeItemType.Directory)
+                            .Cast<LinkViewModel>()
+                            .OrderByDescending(r => r.Used)
+                            .ThenByDescending(r => r.LastUsed)
+                            .Cast<ItemViewModel>()
+                            .Concat(items.Where(i => i.Type == TreeItemType.Directory))],
+                        SortType.LeastVisited => [.. items
+                            .Where(i => i.Type != TreeItemType.Directory)
+                            .Cast<LinkViewModel>()
+                            .OrderBy(r => r.Used)
+                            .ThenByDescending(r => r.LastUsed)
+                            .Cast<ItemViewModel>()
+                            .Concat(items.Where(i => i.Type == TreeItemType.Directory))],
+                        SortType.MostRecentlyVisited => [.. items
+                            .Where(i => i.Type != TreeItemType.Directory)
+                            .Cast<LinkViewModel>()
+                            .OrderByDescending(r => r.LastUsed)
+                            .ThenByDescending(r => r.Used)
+                            .Cast<ItemViewModel>()
+                            .Concat(items.Where(i => i.Type == TreeItemType.Directory))],
+                        SortType.LeastRecentlyVisited => [.. items
+                            .Where(i => i.Type != TreeItemType.Directory)
+                            .Cast<LinkViewModel>()
+                            .OrderBy(r => r.LastUsed)
+                            .ThenByDescending(r => r.Used)
+                            .Cast<ItemViewModel>()
+                            .Concat(items.Where(i => i.Type == TreeItemType.Directory))],
+                        _ => items.ToList()
+                    });
+                });
+
             if (directory != null)
             {
                 directory.DescendantAdded += Directory_DescendantAdded; 

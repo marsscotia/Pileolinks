@@ -55,7 +55,7 @@ public partial class Search : ContentPage
 		ViewModel.Leaving();
     }
 
-    private async void AlertRequested(object sender, DialogRequestedEventArgs dialogRequestedEventArgs)
+	private async void AlertRequested(object sender, DialogRequestedEventArgs dialogRequestedEventArgs)
 	{
 		if (dialogRequestedEventArgs.Cancel == null)
 		{
@@ -63,12 +63,7 @@ public partial class Search : ContentPage
 		}
 		else 
 		{
-            await DisplayAlertAsync(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm, dialogRequestedEventArgs.Cancel);
-        }
+			await DisplayAlertAsync(dialogRequestedEventArgs.Title, dialogRequestedEventArgs.Message, dialogRequestedEventArgs.Confirm, dialogRequestedEventArgs.Cancel);
+		}
 	}
-
-    private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
-    {
-		await ViewModel.SortCommand.ExecuteAsync(null);
-    }
 }

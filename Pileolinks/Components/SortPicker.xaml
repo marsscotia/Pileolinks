@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Pileolinks.Components.SortPicker"
+             x:Name="sortPickerComponent">
+
+    <Grid ColumnDefinitions="Auto, *"
+          ColumnSpacing="8"
+          VerticalOptions="Center">
+
+        <Label Text="Sort:"
+               Grid.Column="0"
+               HorizontalTextAlignment="End"
+               VerticalTextAlignment="Center"
+               IsVisible="{Binding Source={x:Reference sortPickerComponent}, Path=ShowLabel}"/>
+
+        <Picker Grid.Column="1"
+                ItemsSource="{Binding Source={x:Reference sortPickerComponent}, Path=SortOptions}"
+                SelectedItem="{Binding Source={x:Reference sortPickerComponent}, Path=SelectedSort, Mode=TwoWay}"
+                ItemDisplayBinding="{Binding Description}"
+                IsVisible="{Binding Source={x:Reference sortPickerComponent}, Path=HasItems}"/>
+    </Grid>
+
+</ContentView>

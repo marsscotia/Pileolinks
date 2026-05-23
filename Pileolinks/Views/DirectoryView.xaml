@@ -2,10 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:components="clr-namespace:Pileolinks.Components"
              x:Class="Pileolinks.Views.DirectoryView"
              Title="{Binding Name}"
              x:DataType="viewmodels:DirectoryViewModel">
-    <Grid RowDefinitions="48, *, 48"
+    <Grid RowDefinitions="48, 48, *, 48"
           ColumnDefinitions="48, 48, *, 48"
           Padding="8">
         <ImageButton Grid.Column="3"
@@ -17,9 +18,17 @@
                                  Size="20"/>
             </ImageButton.Source>
         </ImageButton>
+
+        <components:SortPicker Grid.Row="1"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="4"
+                              SortBehavior="{Binding SortBehavior}"
+                              ShowLabel="True"
+                              IsVisible="{Binding SortBehavior.HasItems}"/>
+
         <CollectionView ItemsSource="{Binding Items}"
                         ItemTemplate="{StaticResource SummaryDataTemplateSelector}"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Grid.ColumnSpan="4">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
@@ -32,7 +41,7 @@
                        HorizontalTextAlignment="Center"/>
             </CollectionView.EmptyView>
         </CollectionView>
-        <ImageButton Grid.Row="2"
+        <ImageButton Grid.Row="3"
                      Aspect="Center"
                      Command="{Binding AddLinkCommand}">
             <ImageButton.Source>
@@ -41,7 +50,7 @@
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
-        <ImageButton Grid.Row="2"
+        <ImageButton Grid.Row="3"
                      Grid.Column="1"
                      Aspect="Center"
                      Clicked="ImageButton_Clicked">
