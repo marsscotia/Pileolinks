@@ -25,7 +25,7 @@ public partial class DirectoryView : ContentPage
 
     private async void ViewModel_ConfirmDeleteLinkRequested(object sender, RequestDeleteLinkEventArgs e)
     {
-        bool result = await DisplayAlert(e.Title, e.Message, e.ConfirmButton, e.CancelButton);
+        bool result = await DisplayAlertAsync(e.Title, e.Message, e.ConfirmButton, e.CancelButton);
         if (result)
         {
             ViewModel.DeleteLinkCommand.Execute(e.Id);
@@ -46,13 +46,13 @@ public partial class DirectoryView : ContentPage
         }
         catch (Exception)
         {
-            await DisplayAlert("Something went wrong", "We couldn't open this link in your browser", "OK");
+            await DisplayAlertAsync("Something went wrong", "We couldn't open this link in your browser", "OK");
         }
     }
 
     private async void ViewModel_AlertRequested(object sender, AlertEventArgs e)
     {
-        await DisplayAlert(e.Title, e.Message, e.ConfirmButton);
+        await DisplayAlertAsync(e.Title, e.Message, e.ConfirmButton);
     }
 
     private async void ViewModel_EditLinkRequested(object sender, LinkViewModel e)

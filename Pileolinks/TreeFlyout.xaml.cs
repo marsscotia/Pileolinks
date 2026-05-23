@@ -53,12 +53,12 @@ public partial class TreeFlyout : ContentPage
 
     private async void ViewModel_AlertRequested(object sender, AlertEventArgs e)
     {
-        await DisplayAlert(e.Title, e.Message, e.ConfirmButton);
+        await DisplayAlertAsync(e.Title, e.Message, e.ConfirmButton);
     }
 
     private async void ViewModel_DeleteRequested(object sender, Components.Tree.ITreeItem e)
     {
-        bool answer = await DisplayAlert("Delete Directory", $"This will delete the directory '{e.Name}' and its contents. Are you sure you want to delete it?", "Delete", "Cancel");
+        bool answer = await DisplayAlertAsync("Delete Directory", $"This will delete the directory '{e.Name}' and its contents. Are you sure you want to delete it?", "Delete", "Cancel");
         if (answer)
         {
             ViewModel.DeleteCommand.Execute(e);
@@ -67,7 +67,7 @@ public partial class TreeFlyout : ContentPage
 
     private async void Tree_InvalidMoveRequested(object sender, string e)
     {
-        await DisplayAlert("Impossible Move", e, "OK");
+        await DisplayAlertAsync("Impossible Move", e, "OK");
     }
 
 }

@@ -28,17 +28,20 @@ namespace Pileolinks.Services
                 switch (current.Type)
                 {
                     case TreeItemType.Directory:
-                        treeDTOs.Add(new DirectoryDTO
-                        (
-                            Id : current.Id,
-                            Name : current.Name,
-                            ItemType : current.Type.ToString(),
-                            DescendantIds : [.. current.Descendants.Select(d => d.Id)],
-                            AncestorId : current.Ancestor?.Id
-                        ));
-                        foreach (ITreeItem child in current.Descendants)
+                        if (current is IParentTreeItem parentItem)
                         {
-                            stack.Push(child);
+                            treeDTOs.Add(new DirectoryDTO
+                            (
+                                Id : current.Id,
+                                Name : current.Name,
+                                ItemType : current.Type.ToString(),
+                                DescendantIds : [.. parentItem.Descendants.Select(d => d.Id)],
+                                AncestorId : current.Ancestor?.Id
+                            ));
+                            foreach (ITreeItem child in parentItem.Descendants)
+                            {
+                                stack.Push(child);
+                            }
                         }
                         break;
                     case TreeItemType.Link:

@@ -17,21 +17,27 @@ namespace Pileolinks.Components.Tree
         string Id { get; }
         string Name { get; }
         TreeItemType Type { get; }
-        List<ITreeItem> Descendants { get; }
-        List<ITreeItem> Directories { get; }
         ITreeItem Ancestor { get; }
         bool HasAncestor { get; }
+
+        event EventHandler Deleted;
+        event EventHandler NameChanged;
+
+        void Delete();
+        void Rename(string name);
+        bool MoveToDirectory(ITreeItem directory);
+    }
+
+    public interface IParentTreeItem : ITreeItem
+    {
+        List<ITreeItem> Descendants { get; }
+        List<ITreeItem> Directories { get; }
         bool HasDescendants { get; }
         bool HasDirectories { get; }
 
         event EventHandler<ITreeItem> DescendantAdded;
-        event EventHandler Deleted;
         event EventHandler<ITreeItem> Moved;
-        event EventHandler NameChanged;
 
         bool AddDirectory(string name);
-        void Delete();
-        bool MoveToDirectory(ITreeItem directory);
-        void Rename(string name);
     }
 }

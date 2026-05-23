@@ -2,7 +2,7 @@
 
 namespace Pileolinks.Models
 {
-    public class LinkDirectory : ITreeItem
+    public class LinkDirectory : IParentTreeItem
     {
         private readonly string id;
         private ITreeItem parent;
@@ -85,17 +85,22 @@ namespace Pileolinks.Models
 
             bool result;
 
-            if (directory.Descendants.Any(d => d.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
+            if (directory is not IParentTreeItem parentDirectory)
+            {
+                throw new ArgumentException("The specified directory must implement IParentTreeItem");
+            }
+
+            if (parentDirectory.Descendants.Any(d => d.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)))
             {
                 result = false;
             }
             else
             {
-                if (HasAncestor)
+                if (HasAncestor && Ancestor is IParentTreeItem parentAncestor)
                 {
-                    Ancestor.Descendants.Remove(this); 
+                    parentAncestor.Descendants.Remove(this); 
                 }
-                directory.Descendants.Add(this);
+                parentDirectory.Descendants.Add(this);
                 parent = directory;
                 Moved?.Invoke(this, directory);
                 result = true;

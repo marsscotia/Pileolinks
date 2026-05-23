@@ -256,9 +256,12 @@ public partial class Tree : ContentView
             treeItemViewModel.ItemMoved += MoveItem;
             ItemsSource.Add(treeItemViewModel);
 
-            foreach (ITreeItem item in current.Directories.OrderByDescending(i => i.Name))
+            if (current is IParentTreeItem parentItem)
             {
-                stack.Push(item);
+                foreach (ITreeItem item in parentItem.Directories.OrderByDescending(i => i.Name))
+                {
+                    stack.Push(item);
+                }
             }
         }
 

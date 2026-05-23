@@ -63,28 +63,13 @@ namespace Pileolinks.Models
 
         public TreeItemType Type => TreeItemType.Link;
 
-        public List<ITreeItem> Descendants => null;
-
-        public List<ITreeItem> Directories => null;
-
         public ITreeItem Ancestor => parent;
 
         public bool HasAncestor => parent != null;
 
-        public bool HasDescendants => false;
-
-        public bool HasDirectories => false;
-
-        public event EventHandler<ITreeItem> DescendantAdded;
         public event EventHandler Deleted;
-        public event EventHandler<ITreeItem> Moved;
         public event EventHandler NameChanged;
         public event EventHandler UsageChanged;
-
-        public bool AddDirectory(string name)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Delete()
         {
@@ -100,13 +85,15 @@ namespace Pileolinks.Models
 
             bool result;
 
-            if (HasAncestor)
+            if (HasAncestor && Ancestor is IParentTreeItem parentAncestor)
             {
-                Ancestor.Descendants.Remove(this);
+                parentAncestor.Descendants.Remove(this);
             }
-            directory.Descendants.Add(this);
+            if (directory is IParentTreeItem parentDirectory)
+            {
+                parentDirectory.Descendants.Add(this);
+            }
             parent = directory;
-            Moved?.Invoke(this, directory);
             result = true;
 
             return result;

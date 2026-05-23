@@ -21,12 +21,13 @@ public partial class App : Application
 	{
 		InitializeComponent();
         ServiceProvider = serviceProvider;
-        MainPage = (MainPage)serviceProvider.GetRequiredService(typeof(MainPage));
 	}
 
     protected override Window CreateWindow(IActivationState activationState)
     {
-        Window window = base.CreateWindow(activationState);
+        var mainPage = ServiceProvider.GetRequiredService<MainPage>();
+        
+        Window window = new(mainPage);
 
         window.Created += (s, e) =>
         {
@@ -38,12 +39,12 @@ public partial class App : Application
 
     private void App_Stopped(object sender, EventArgs e)
     {
-        (MainPage as MainPage).TreeFlyout.ViewModel.SaveState();
+        (Windows[0].Page as MainPage).TreeFlyout.ViewModel.SaveState();
     }
 
     protected override void OnSleep()
     {
-        (MainPage as MainPage).TreeFlyout.ViewModel.SaveState();
+        (Windows[0].Page as MainPage).TreeFlyout.ViewModel.SaveState();
         base.OnSleep();
     }
 }
