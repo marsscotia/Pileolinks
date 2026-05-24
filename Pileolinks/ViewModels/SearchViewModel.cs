@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Pileolinks.Components.Tree;
 using Pileolinks.Models;
 using Pileolinks.Services.Interfaces;
+using Pileolinks.ViewModels.Behaviors;
 using Pileolinks.ViewModels.Enums;
 using Pileolinks.ViewModels.Factories.Interfaces;
 using System.Collections.ObjectModel;
@@ -24,28 +25,16 @@ namespace Pileolinks.ViewModels
         public partial bool SearchPerformed { get; set; }
 
         [ObservableProperty]
-        public partial Sort SelectedSort { get; set; }
-
-        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasResultsAndIsNotLoading))]
         public partial bool Loading { get; set; }
 
         private readonly List<Link> links = [];
 
-        private readonly List<Sort> sorts =
-        [
-            new Sort(SortType.Alphabetical, "A - Z"),
-            new Sort(SortType.ReverseAlphabetical, "Z - A"),
-            new Sort(SortType.MostVisited, "Most visited"),
-            new Sort(SortType.LeastVisited, "Least visited"),
-            new Sort(SortType.MostRecentlyVisited, "Most recently visited"),
-            new Sort(SortType.LeastRecentlyVisited, "Least recently visited")
-        ];
-
         private readonly IDataService dataService;
         private readonly ILinkViewModelFactory linkViewModelFactory;
         private readonly IEssentialsService essentialsService;
         private readonly ILinkCache linkCache;
+        private readonly SortableBehavior<LinkViewModel> sortBehavior;
 
         public bool HasResultsAndIsNotLoading => SearchHasResults && !Loading;
 
@@ -57,7 +46,7 @@ namespace Pileolinks.ViewModels
 
         public ObservableCollection<LinkViewModel> Results { get; private set; } = new();
 
-        public List<Sort> Sorts => sorts;
+        public SortableBehavior<LinkViewModel> SortBehavior => sortBehavior;
 
         public event EventHandler<DialogRequestedEventArgs> AlertRequested;
         public event EventHandler<string> LaunchUrlRequested;
@@ -70,9 +59,26 @@ namespace Pileolinks.ViewModels
             this.linkViewModelFactory = linkViewModelFactory;
             this.essentialsService = essentialsService;
             this.linkCache = linkCache;
+
+            // Initialize sortable behavior with sort logic
+            sortBehavior = new SortableBehavior<LinkViewModel>(
+                Results,
+                async (results, selectedSort) =>
+                {
+                    return await Task.Run(() => selectedSort.SortType switch
+                    {
+                        SortType.Alphabetical => [.. results.OrderBy(r => r.Name)],
+                        SortType.ReverseAlphabetical => [.. results.OrderByDescending(r => r.Name)],
+                        SortType.MostVisited => [.. results.OrderByDescending(r => r.Used).ThenByDescending(r => r.LastUsed)],
+                        SortType.LeastVisited => [.. results.OrderBy(r => r.Used).ThenByDescending(r => r.LastUsed)],
+                        SortType.MostRecentlyVisited => [.. results.OrderByDescending(r => r.LastUsed).ThenByDescending(r => r.Used)],
+                        SortType.LeastRecentlyVisited => [.. results.OrderBy(r => r.LastUsed).ThenByDescending(r => r.Used)],
+                        _ => results.ToList()
+                    });
+                });
+
             Results.CollectionChanged += Results_CollectionChanged;
             SearchPerformed = false;
-            SelectedSort = sorts.FirstOrDefault(s => s.SortType == SortType.Alphabetical);
             Loading = false;
         }
 
@@ -204,6 +210,11 @@ namespace Pileolinks.ViewModels
             }
         }
 
+        private async Task Sort()
+        {
+            await sortBehavior.SortCommand.ExecuteAsync(null);
+        }
+
         public void Arriving()
         {
             links.Clear();
@@ -221,33 +232,6 @@ namespace Pileolinks.ViewModels
                     result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
                     result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
                 }
-            }
-        }
-
-        [RelayCommand]
-        private async Task Sort()
-        {
-            if (SearchPerformed && SearchHasResults)
-            {
-                Loading = true;
-                
-                var sortedResults =  await Task.Run(() => SelectedSort.SortType switch
-                {
-                    SortType.Alphabetical => [.. Results.OrderBy(r => r.Name)],
-                    SortType.ReverseAlphabetical => [.. Results.OrderByDescending(r => r.Name)],
-                    SortType.MostVisited => [.. Results.OrderByDescending(r => r.Used).ThenByDescending(r => r.LastUsed)],
-                    SortType.LeastVisited => [.. Results.OrderBy(r => r.Used).ThenByDescending(r => r.LastUsed)],
-                    SortType.MostRecentlyVisited => [.. Results.OrderByDescending(r => r.LastUsed).ThenByDescending(r => r.Used)],
-                    SortType.LeastRecentlyVisited => [.. Results.OrderBy(r => r.LastUsed).ThenByDescending(r => r.Used)],
-                    _ => Results.ToList()
-                });
-
-                for (int i = 0; i < sortedResults.Count; i++)
-                {
-                    Results.Move(Results.IndexOf(sortedResults[i]), i);
-                }
-
-                Loading = false;
             }
         }
     }

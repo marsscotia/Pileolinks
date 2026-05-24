@@ -2,25 +2,43 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:Pileolinks.ViewModels"
+             xmlns:components="clr-namespace:Pileolinks.Components"
              x:Class="Pileolinks.Views.DirectoryView"
              Title="{Binding Name}"
              x:DataType="viewmodels:DirectoryViewModel">
-    <Grid RowDefinitions="48, *, 48"
-          ColumnDefinitions="48, 48, *, 48"
-          Padding="8">
-        <ImageButton Grid.Column="3"
+    <Grid RowDefinitions="48, 48, *, 48"
+          ColumnDefinitions="48, 48, *, 144, 48"
+          Padding="8"
+          RowSpacing="4"
+          ColumnSpacing="4">
+        <ImageButton Grid.Column="4"
                      Aspect="Center"
                      Command="{Binding SearchCommand}">
             <ImageButton.Source>
                 <FontImageSource Glyph="{StaticResource Search}"
                                  FontFamily="Fluent"
-                                 Size="20"/>
+                                 Size="20" />
             </ImageButton.Source>
         </ImageButton>
+
+        <Label Text="Sort:"
+               Grid.Column="2"
+               Grid.Row="1"
+               HorizontalTextAlignment="End"
+               VerticalTextAlignment="Center"
+               IsVisible="{Binding SortBehavior.HasItems}" />
+
+        <components:SortPicker Grid.Row="1"
+                              Grid.Column="3"
+                              Grid.ColumnSpan="2"
+                              SortBehavior="{Binding SortBehavior}"
+                              ShowLabel="False"
+                              IsVisible="{Binding SortBehavior.HasItems}"/>
+
         <CollectionView ItemsSource="{Binding Items}"
                         ItemTemplate="{StaticResource SummaryDataTemplateSelector}"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="4">
+                        Grid.Row="2"
+                        Grid.ColumnSpan="5">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
                                    ItemSpacing="12" />
@@ -32,7 +50,7 @@
                        HorizontalTextAlignment="Center"/>
             </CollectionView.EmptyView>
         </CollectionView>
-        <ImageButton Grid.Row="2"
+        <ImageButton Grid.Row="3"
                      Aspect="Center"
                      Command="{Binding AddLinkCommand}">
             <ImageButton.Source>
@@ -41,7 +59,7 @@
                                  Size="20" />
             </ImageButton.Source>
         </ImageButton>
-        <ImageButton Grid.Row="2"
+        <ImageButton Grid.Row="3"
                      Grid.Column="1"
                      Aspect="Center"
                      Clicked="ImageButton_Clicked">
