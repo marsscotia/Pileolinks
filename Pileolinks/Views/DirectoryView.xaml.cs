@@ -90,6 +90,12 @@ public partial class DirectoryView : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        ViewModel.DirectorySelected -= ViewModel_DirectorySelected;
+        ViewModel.EditLinkRequested -= ViewModel_EditLinkRequested;
+        ViewModel.LaunchUrlRequested -= ViewModel_LaunchUrlRequested;
+        ViewModel.AlertRequested -= ViewModel_AlertRequested;
+        ViewModel.SearchRequested -= ViewModel_SearchRequested;
+        ViewModel.ConfirmDeleteLinkRequested -= ViewModel_ConfirmDeleteLinkRequested;
         ViewModel.Leaving();
     }
 }

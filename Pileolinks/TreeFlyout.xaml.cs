@@ -70,4 +70,13 @@ public partial class TreeFlyout : ContentPage
         await DisplayAlertAsync("Impossible Move", e, "OK");
     }
 
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        ViewModel.DeleteRequested -= ViewModel_DeleteRequested;
+        ViewModel.AlertRequested -= ViewModel_AlertRequested;
+        ViewModel.AddCollectionRequested -= ViewModel_AddCollectionRequested;
+        ViewModel.AddDirectoryRequested -= ViewModel_AddDirectoryRequested;
+        ViewModel.RenameRequested -= ViewModel_RenameRequested;
+    }
 }
