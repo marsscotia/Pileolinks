@@ -7,16 +7,18 @@ public partial class MainPage : FlyoutPage
 {
 	public TreeFlyout TreeFlyout { get; private set; }
     
-    public MainPage(TreeFlyout treeFlyout)
+	private bool isInitialized = false;
+
+	public MainPage(TreeFlyout treeFlyout)
 	{
 		InitializeComponent();
 		BindingContext = this;
-        Flyout = TreeFlyout = treeFlyout;
-        treeFlyout.TreeItemViewModelChanged += Flyout_TreeItemViewModelChanged;
-        treeFlyout.Loaded += TreeFlyout_Loaded;
-        TreeNavigation.Pushed += TreeNavigation_Pushed;
-        TreeNavigation.Popped += TreeNavigation_Popped;
-    }
+		Flyout = TreeFlyout = treeFlyout;
+		treeFlyout.TreeItemViewModelChanged += Flyout_TreeItemViewModelChanged;
+		treeFlyout.Loaded += TreeFlyout_Loaded;
+		TreeNavigation.Pushed += TreeNavigation_Pushed;
+		TreeNavigation.Popped += TreeNavigation_Popped;
+	}
 
     private void TreeNavigation_Popped(object sender, NavigationEventArgs e)
     {
@@ -60,11 +62,15 @@ public partial class MainPage : FlyoutPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        DirectoryView initial = new(TreeFlyout.ViewModel.InitialNavigate);
-        initial.NavigatedTo += TreeNavigation_NavigatedTo;
-        initial.NavigatedFrom += TreeNavigation_NavigatedFrom;
-        await TreeNavigation.PushAsync(initial);
-        SetCurrentSelectedItem(TreeNavigation.CurrentPage);
+        if (!isInitialized)
+        {
+            isInitialized = true;
+            DirectoryView initial = new(TreeFlyout.ViewModel.InitialNavigate);
+            initial.NavigatedTo += TreeNavigation_NavigatedTo;
+            initial.NavigatedFrom += TreeNavigation_NavigatedFrom;
+            await TreeNavigation.PushAsync(initial);
+            SetCurrentSelectedItem(TreeNavigation.CurrentPage);
+        }
     }
 
     private async void Flyout_TreeItemViewModelChanged(object sender, Components.Tree.ITreeItem e)
@@ -91,6 +97,13 @@ public partial class MainPage : FlyoutPage
             await TreeNavigation.PopAsync();
             await TreeNavigation.PushAsync(new DirectoryView(TreeFlyout.ViewModel.InitialNavigate));
         }
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        TreeFlyout.TreeItemViewModelChanged -= Flyout_TreeItemViewModelChanged;
+        TreeFlyout.Loaded -= TreeFlyout_Loaded;
     }
 }
 

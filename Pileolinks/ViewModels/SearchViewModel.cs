@@ -172,6 +172,8 @@ namespace Pileolinks.ViewModels
             {
                 result.LaunchUrlRequested -= LinkViewModel_LaunchUrlRequested;
                 result.EditLinkRequested -= LinkViewModel_EditLinkRequested;
+                result.CopyUrlRequested -= LinkViewModel_CopyUrlRequested;
+                result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
             }
             Results.Clear();
             SearchPerformed = false;
@@ -233,6 +235,7 @@ namespace Pileolinks.ViewModels
                     result.OpenParentRequested -= LinkViewModel_OpenParentRequested;
                 }
             }
+            Results.CollectionChanged -= Results_CollectionChanged;
         }
     }
 }

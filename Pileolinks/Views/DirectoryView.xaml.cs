@@ -15,12 +15,6 @@ public partial class DirectoryView : ContentPage
 		InitializeComponent();
         ILinkDirectoryViewModelFactory linkDirectoryViewModelFactory = App.Current.ServiceProvider.GetRequiredService<ILinkDirectoryViewModelFactory>();
         BindingContext = ViewModel = linkDirectoryViewModelFactory.GetDirectoryViewModel((LinkDirectory)item);
-        ViewModel.DirectorySelected += ViewModel_DirectorySelected;
-        ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
-        ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
-        ViewModel.AlertRequested += ViewModel_AlertRequested;
-        ViewModel.SearchRequested += ViewModel_SearchRequested;
-        ViewModel.ConfirmDeleteLinkRequested += ViewModel_ConfirmDeleteLinkRequested;
 	}
 
     private async void ViewModel_ConfirmDeleteLinkRequested(object sender, RequestDeleteLinkEventArgs e)
@@ -76,6 +70,7 @@ public partial class DirectoryView : ContentPage
     {
         base.OnAppearing();
         ViewModel.Initialise();
+        RegisterEventHandlers();
     }
 
     private async void ImageButton_Clicked(object sender, EventArgs e)
@@ -90,6 +85,25 @@ public partial class DirectoryView : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        ViewModel.DirectorySelected -= ViewModel_DirectorySelected;
+        ViewModel.EditLinkRequested -= ViewModel_EditLinkRequested;
+        ViewModel.LaunchUrlRequested -= ViewModel_LaunchUrlRequested;
+        ViewModel.AlertRequested -= ViewModel_AlertRequested;
+        ViewModel.SearchRequested -= ViewModel_SearchRequested;
+        ViewModel.ConfirmDeleteLinkRequested -= ViewModel_ConfirmDeleteLinkRequested;
         ViewModel.Leaving();
+    }
+
+    private void RegisterEventHandlers()
+    {
+        if (ViewModel is not null)
+        {
+            ViewModel.DirectorySelected += ViewModel_DirectorySelected;
+            ViewModel.EditLinkRequested += ViewModel_EditLinkRequested;
+            ViewModel.LaunchUrlRequested += ViewModel_LaunchUrlRequested;
+            ViewModel.AlertRequested += ViewModel_AlertRequested;
+            ViewModel.SearchRequested += ViewModel_SearchRequested;
+            ViewModel.ConfirmDeleteLinkRequested += ViewModel_ConfirmDeleteLinkRequested;
+        }
     }
 }
